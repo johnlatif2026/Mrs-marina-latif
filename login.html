@@ -5,13 +5,21 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>تسجيل الدخول - Dashboard</title>
 <style>
-body { font-family: Arial, sans-serif; display:flex; justify-content:center; align-items:center; height:100vh; background:#f0f0f0; }
-.login-container { background:white; padding:30px; border-radius:10px; box-shadow:0 0 10px rgba(0,0,0,0.1); width:300px; }
-h2 { text-align:center; color:#4CAF50; }
-input { width:100%; padding:10px; margin:10px 0; border:1px solid #ccc; border-radius:5px; }
-button { width:100%; padding:10px; background:#4CAF50; color:white; border:none; border-radius:5px; cursor:pointer; }
+:root {
+  --bg-color:#121212;
+  --text-color:#e0e0e0;
+  --accent-color:#4CAF50;
+  --input-bg:#1f1f1f;
+  --input-border:#333;
+}
+body { font-family: Arial, sans-serif; display:flex; justify-content:center; align-items:center; height:100vh; background:var(--bg-color); color:var(--text-color); }
+.login-container { background:#1f1f1f; padding:30px; border-radius:10px; box-shadow:0 0 15px rgba(0,0,0,0.4); width:300px; }
+h2 { text-align:center; color:var(--accent-color); margin-bottom:20px; }
+input { width:100%; padding:10px; margin:10px 0; border:1px solid var(--input-border); border-radius:5px; background:var(--input-bg); color:var(--text-color); }
+button { width:100%; padding:10px; background:var(--accent-color); color:white; border:none; border-radius:5px; cursor:pointer; }
 button:hover { background:#45a049; }
-#status { color:red; text-align:center; }
+#status { color:#ff6b6b; text-align:center; margin-top:10px; }
+@media(max-width:400px){ .login-container{ width:90%; padding:20px; } }
 </style>
 </head>
 <body>
@@ -32,18 +40,23 @@ form.addEventListener('submit', async (e) => {
   e.preventDefault();
   const formData = new FormData(form);
   const data = { username: formData.get('username'), password: formData.get('password') };
-  const res = await fetch('/api/login', {
-    method:'POST',
-    headers:{ 'Content-Type':'application/json' },
-    body: JSON.stringify(data)
-  });
   const status = document.getElementById('status');
-  if(res.ok){
-    const json = await res.json();
-    localStorage.setItem('token', json.token);
-    window.location.href = '/dashboard';
-  } else {
-    status.textContent = 'اسم المستخدم أو كلمة المرور غير صحيحة';
+  try {
+    const res = await fetch('/api/login', {
+      method:'POST',
+      headers:{ 'Content-Type':'application/json' },
+      body: JSON.stringify(data)
+    });
+    if(res.ok){
+      const json = await res.json();
+      localStorage.setItem('token', json.token);
+      window.location.href = '/dashboard';
+    } else {
+      status.textContent = 'اسم المستخدم أو كلمة المرور غير صحيحة';
+    }
+  } catch(err){
+    status.textContent = "حدث خطأ: " + err.message;
+    console.error(err);
   }
 });
 </script>
