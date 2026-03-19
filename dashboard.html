@@ -40,7 +40,7 @@ tr:hover { background:#f1f1f1; }
 
 <script>
 const token = localStorage.getItem('token');
-if(!token) window.location.href = '/login.html';
+if(!token) window.location.href = '/login';
 
 async function loadMessages(){
   const res = await fetch('/api/messages', { headers:{ 'Authorization':'Bearer ' + token } });
