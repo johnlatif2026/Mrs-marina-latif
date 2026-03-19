@@ -1,52 +1,76 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-  <meta charset="UTF-8">
-  <title>Dashboard</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard - الرسائل</title>
+<style>
+body { font-family: Arial, sans-serif; background:#f9f9f9; margin:0; padding:0; }
+header { background:#4CAF50; color:white; padding:20px; text-align:center; }
+.container { padding:20px; }
+table { width:100%; border-collapse: collapse; background:white; box-shadow:0 0 10px rgba(0,0,0,0.1); }
+th, td { padding:10px; border-bottom:1px solid #ddd; text-align:left; }
+th { background:#4CAF50; color:white; }
+tr:hover { background:#f1f1f1; }
+.logout { float:right; background:#f44336; color:white; border:none; padding:8px 15px; border-radius:5px; cursor:pointer; }
+.logout:hover { background:#e53935; }
+</style>
 </head>
 <body>
-  <h1>لوحة التحكم</h1>
 
-  <h2>إضافة درس جديد</h2>
-  <form id="addPostForm">
-    <input type="text" name="title" placeholder="عنوان الدرس" required>
-    <input type="text" name="description" placeholder="وصف الدرس" required>
-    <button type="submit">إضافة</button>
-  </form>
+<header>
+  <h1>لوحة الرسائل الواردة</h1>
+  <button class="logout" onclick="logout()">تسجيل الخروج</button>
+</header>
 
-  <h2>قائمة الدروس</h2>
-  <ul id="posts"></ul>
+<div class="container">
+  <table>
+    <thead>
+      <tr>
+        <th>الاسم</th>
+        <th>البريد الإلكتروني</th>
+        <th>الرسالة</th>
+        <th>تاريخ الإرسال</th>
+      </tr>
+    </thead>
+    <tbody id="messagesBody">
+    </tbody>
+  </table>
+</div>
 
-  <script>
-    async function loadPosts() {
-      const res = await fetch('/api/posts', { headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } });
-      const posts = await res.json();
-      const ul = document.getElementById('posts');
-      ul.innerHTML = '';
-      posts.forEach(post => {
-        const li = document.createElement('li');
-        li.textContent = post.title + ' - ' + post.description;
-        ul.appendChild(li);
-      });
-    }
+<script>
+const token = localStorage.getItem('token');
+if(!token) window.location.href = '/login.html';
 
-    document.getElementById('addPostForm').addEventListener('submit', async e => {
-      e.preventDefault();
-      const formData = new FormData(e.target);
-      const data = { title: formData.get('title'), description: formData.get('description') };
-      await fetch('/api/posts', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + localStorage.getItem('token')
-        },
-        body: JSON.stringify(data)
-      });
-      e.target.reset();
-      loadPosts();
+async function loadMessages(){
+  const res = await fetch('/api/messages', { headers:{ 'Authorization':'Bearer ' + token } });
+  if(res.ok){
+    const messages = await res.json();
+    const tbody = document.getElementById('messagesBody');
+    tbody.innerHTML = '';
+    messages.forEach(msg => {
+      const tr = document.createElement('tr');
+      const date = new Date(msg.createdAt._seconds ? msg.createdAt._seconds*1000 : msg.createdAt);
+      tr.innerHTML = `
+        <td>${msg.name}</td>
+        <td>${msg.email}</td>
+        <td>${msg.message}</td>
+        <td>${date.toLocaleString()}</td>
+      `;
+      tbody.appendChild(tr);
     });
+  } else {
+    alert('فشل تحميل الرسائل');
+  }
+}
 
-    loadPosts();
-  </script>
+function logout(){
+  localStorage.removeItem('token');
+  window.location.href = '/login.html';
+}
+
+loadMessages();
+</script>
+
 </body>
 </html>
