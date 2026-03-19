@@ -35,17 +35,17 @@ function authenticateToken(req,res,next){
 // API: submit messages
 app.post('/api/messages', async (req,res)=>{
   try{
-    const { name,email,message } = req.body;
+    const { name,phone,message } = req.body;
     const now = new Date();
     await db.collection('messages').add({
-      name,email,message,createdAt: admin.firestore.Timestamp.fromDate(now)
+      name,phone,message,createdAt: admin.firestore.Timestamp.fromDate(now)
     });
     await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_TOKEN_ID}/sendMessage`,{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body: JSON.stringify({
         chat_id: process.env.TELEGRAM_CHAT_ID,
-        text: `رسالة جديدة من ${name} (${email}):\n${message}`
+        text: `رسالة جديدة من ${name} (${phone}):\n${message}`
       })
     });
     res.status(200).json({ success:true });
