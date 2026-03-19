@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-  <title>لوحة التحكم </title>
+  <title>Dashboard - لوحة الرسائل</title>
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -26,12 +26,15 @@
       --button-danger: #ff6b6b;
       --button-danger-hover: #ff5252;
       --button-success: #4aff9e;
+      --button-warning: #ffaa33;
       --shadow-3d: 0 20px 30px -10px rgba(0,255,150,0.3), 0 0 0 1px rgba(74,255,158,0.2) inset;
       --bg-gradient-start: #1a3a2a;
       --bg-gradient-end: #0a120e;
       --body-bg-overlay: repeating-linear-gradient(45deg, transparent 0%, transparent 5%, rgba(74, 255, 158, 0.03) 5%, rgba(123, 197, 245, 0.03) 10%);
       --header-gradient: linear-gradient(145deg, #1f4a2f, #0e301c);
       --stat-card-bg: #1a2a1f;
+      --modal-overlay: rgba(0,0,0,0.8);
+      --toast-bg: #1a2a1f;
     }
 
     /* Light mode */
@@ -48,12 +51,15 @@
       --button-danger: #d32f2f;
       --button-danger-hover: #b71c1c;
       --button-success: #2e7d32;
+      --button-warning: #ed6c02;
       --shadow-3d: 0 20px 30px -10px rgba(0,100,50,0.3), 0 0 0 1px rgba(42,122,74,0.2) inset;
       --bg-gradient-start: #a8d8b0;
       --bg-gradient-end: #c8e8d0;
       --body-bg-overlay: repeating-linear-gradient(45deg, transparent 0%, transparent 5%, rgba(42, 122, 74, 0.05) 5%, rgba(26, 90, 154, 0.05) 10%);
       --header-gradient: linear-gradient(145deg, #6da67a, #4a8c5a);
       --stat-card-bg: #ffffff;
+      --modal-overlay: rgba(0,0,0,0.5);
+      --toast-bg: #ffffff;
     }
 
     /* ===== إعادة تعيين الأنماط ===== */
@@ -371,7 +377,53 @@
       box-shadow: 0 5px 15px rgba(0,0,0,0.3);
     }
 
-    /* تنسيق خاص للرسالة */
+    /* ===== زر الحذف ===== */
+    .delete-btn {
+      background: var(--button-danger);
+      color: white;
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      box-shadow: 0 5px 15px rgba(255,107,107,0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .delete-btn::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.3);
+      transform: translate(-50%, -50%);
+      transition: width 0.3s, height 0.3s;
+    }
+
+    .delete-btn:hover::before {
+      width: 100%;
+      height: 100%;
+    }
+
+    .delete-btn:hover {
+      transform: scale(1.1) rotate(5deg);
+      box-shadow: 0 10px 25px var(--button-danger);
+    }
+
+    .delete-btn:active {
+      transform: scale(0.95);
+    }
+
+    /* ===== تنسيق خاص للرسالة ===== */
     .message-cell {
       max-width: 300px;
       white-space: nowrap;
@@ -390,7 +442,7 @@
       box-shadow: 0 5px 25px rgba(0,0,0,0.5);
     }
 
-    /* حالة عدم وجود رسائل */
+    /* ===== حالة عدم وجود رسائل ===== */
     .no-messages {
       text-align: center;
       padding: 50px !important;
@@ -403,6 +455,205 @@
       color: var(--accent-neon);
       margin-bottom: 15px;
       display: block;
+    }
+
+    /* ===== نافذة التأكيد (Modal) ===== */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--modal-overlay);
+      backdrop-filter: blur(5px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal-content {
+      background: var(--bg-card);
+      padding: 40px;
+      border-radius: 50px 20px 50px 20px;
+      box-shadow: var(--shadow-3d), 0 0 50px var(--button-danger);
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+      transform: scale(0.7);
+      transition: all 0.3s ease;
+      border: 2px solid var(--button-danger);
+    }
+
+    .modal-overlay.active .modal-content {
+      transform: scale(1);
+    }
+
+    .modal-icon {
+      font-size: 4rem;
+      color: var(--button-danger);
+      margin-bottom: 20px;
+      animation: shake 0.5s ease;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-10px); }
+      75% { transform: translateX(10px); }
+    }
+
+    .modal-content h3 {
+      font-size: 1.8rem;
+      margin-bottom: 15px;
+      color: var(--text-light);
+    }
+
+    .modal-content p {
+      color: var(--text-dim);
+      margin-bottom: 25px;
+      font-size: 1.1rem;
+    }
+
+    .modal-buttons {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+    }
+
+    .modal-btn {
+      padding: 12px 30px;
+      border: none;
+      border-radius: 50px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .modal-btn.confirm {
+      background: var(--button-danger);
+      color: white;
+    }
+
+    .modal-btn.confirm:hover {
+      background: var(--button-danger-hover);
+      transform: scale(1.05);
+      box-shadow: 0 10px 20px var(--button-danger);
+    }
+
+    .modal-btn.cancel {
+      background: var(--bg-card);
+      color: var(--text-light);
+      border: 2px solid var(--accent-neon);
+    }
+
+    .modal-btn.cancel:hover {
+      background: var(--accent-neon);
+      color: var(--bg-dark);
+      transform: scale(1.05);
+    }
+
+    /* ===== إشعارات Toast ===== */
+    .toast-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 3000;
+    }
+
+    .toast {
+      background: var(--toast-bg);
+      color: var(--text-light);
+      padding: 15px 25px;
+      border-radius: 50px;
+      margin-bottom: 10px;
+      box-shadow: var(--shadow-3d);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transform: translateX(400px);
+      animation: slideInToast 0.3s forwards;
+      border-right: 5px solid var(--accent-neon);
+    }
+
+    .toast.success {
+      border-right-color: var(--accent-neon);
+    }
+
+    .toast.error {
+      border-right-color: var(--button-danger);
+    }
+
+    .toast.warning {
+      border-right-color: var(--button-warning);
+    }
+
+    .toast i {
+      font-size: 1.5rem;
+    }
+
+    .toast.success i {
+      color: var(--accent-neon);
+    }
+
+    .toast.error i {
+      color: var(--button-danger);
+    }
+
+    .toast.warning i {
+      color: var(--button-warning);
+    }
+
+    .toast-content {
+      flex: 1;
+    }
+
+    .toast-title {
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+
+    .toast-message {
+      font-size: 0.9rem;
+      color: var(--text-dim);
+    }
+
+    .toast-close {
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      cursor: pointer;
+      font-size: 1.2rem;
+      transition: 0.3s;
+    }
+
+    .toast-close:hover {
+      color: var(--text-light);
+      transform: scale(1.1);
+    }
+
+    @keyframes slideInToast {
+      to {
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes slideOutToast {
+      to {
+        transform: translateX(400px);
+        opacity: 0;
+      }
     }
 
     /* ===== تحسين الاستجابة ===== */
@@ -450,6 +701,29 @@
       .stat-number {
         font-size: 1.8rem;
       }
+      
+      .delete-btn {
+        width: 35px;
+        height: 35px;
+        font-size: 1rem;
+      }
+      
+      .modal-content {
+        padding: 25px;
+      }
+      
+      .modal-content h3 {
+        font-size: 1.5rem;
+      }
+      
+      .modal-buttons {
+        flex-direction: column;
+      }
+      
+      .toast {
+        max-width: 300px;
+        padding: 12px 18px;
+      }
     }
 
     @media (max-width: 480px) {
@@ -478,6 +752,11 @@
       .stats-container {
         grid-template-columns: 1fr;
       }
+      
+      .modal-content {
+        width: 95%;
+        padding: 20px;
+      }
     }
 
     @media (min-width: 1920px) {
@@ -492,6 +771,12 @@
       th, td {
         padding: 20px;
       }
+      
+      .delete-btn {
+        width: 45px;
+        height: 45px;
+        font-size: 1.3rem;
+      }
     }
 
     @media (orientation: landscape) and (max-height: 600px) {
@@ -505,6 +790,11 @@
       
       .table-wrapper {
         padding: 15px;
+      }
+      
+      .modal-content {
+        max-height: 80vh;
+        overflow-y: auto;
       }
     }
 
@@ -551,6 +841,30 @@
     </label>
   </div>
 
+  <!-- نافذة تأكيد الحذف -->
+  <div class="modal-overlay" id="deleteModal">
+    <div class="modal-content">
+      <div class="modal-icon">
+        <i class="fas fa-exclamation-triangle"></i>
+      </div>
+      <h3>تأكيد الحذف</h3>
+      <p id="deleteMessage">هل أنت متأكد من حذف هذه الرسالة؟</p>
+      <div class="modal-buttons">
+        <button class="modal-btn confirm" id="confirmDelete">
+          <i class="fas fa-trash"></i>
+          <span>نعم، احذف</span>
+        </button>
+        <button class="modal-btn cancel" id="cancelDelete">
+          <i class="fas fa-times"></i>
+          <span>إلغاء</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- حاوية الإشعارات -->
+  <div class="toast-container" id="toastContainer"></div>
+
   <!-- الهيدر -->
   <header class="header-3d">
     <div class="header-content">
@@ -596,11 +910,12 @@
             <th><i class="fas fa-phone"></i> رقم الهاتف</th>
             <th><i class="fas fa-comment"></i> الرسالة</th>
             <th><i class="fas fa-calendar"></i> تاريخ الإرسال</th>
+            <th><i class="fas fa-cog"></i> إجراءات</th>
           </tr>
         </thead>
         <tbody id="messagesBody">
           <tr>
-            <td colspan="4" class="no-messages">
+            <td colspan="5" class="no-messages">
               <i class="fas fa-inbox"></i>
               جاري تحميل الرسائل...
             </td>
@@ -611,8 +926,12 @@
   </div>
 
   <script>
-    // ===== التحقق من التوكن =====
+    // ===== متغيرات عامة =====
     const token = localStorage.getItem('token');
+    let currentDeleteId = null;
+    let messagesList = [];
+
+    // ===== التحقق من التوكن =====
     if (!token) {
       window.location.href = '/login';
     }
@@ -640,6 +959,42 @@
 
     toggleSwitch.addEventListener('change', switchTheme, false);
 
+    // ===== نظام الإشعارات =====
+    function showToast(message, type = 'success', duration = 3000) {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      
+      let icon = 'fa-check-circle';
+      let title = 'نجاح';
+      
+      if (type === 'error') {
+        icon = 'fa-exclamation-circle';
+        title = 'خطأ';
+      } else if (type === 'warning') {
+        icon = 'fa-exclamation-triangle';
+        title = 'تحذير';
+      }
+      
+      toast.innerHTML = `
+        <i class="fas ${icon}"></i>
+        <div class="toast-content">
+          <div class="toast-title">${title}</div>
+          <div class="toast-message">${message}</div>
+        </div>
+        <button class="toast-close" onclick="this.parentElement.remove()">
+          <i class="fas fa-times"></i>
+        </button>
+      `;
+      
+      container.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.style.animation = 'slideOutToast 0.3s forwards';
+        setTimeout(() => toast.remove(), 300);
+      }, duration);
+    }
+
     // ===== تحميل الرسائل =====
     async function loadMessages() {
       try {
@@ -648,19 +1003,20 @@
         });
         
         if (res.ok) {
-          const messages = await res.json();
-          displayMessages(messages);
-          updateStats(messages);
+          messagesList = await res.json();
+          displayMessages(messagesList);
+          updateStats(messagesList);
         } else if (res.status === 401) {
-          // توكن غير صالح - تسجيل خروج تلقائي
           logout();
         } else {
           console.error('Failed to load messages');
           showError('فشل تحميل الرسائل');
+          showToast('فشل تحميل الرسائل', 'error');
         }
       } catch (err) {
         console.error('Error fetching messages:', err);
         showError('خطأ في الاتصال بالخادم');
+        showToast('خطأ في الاتصال بالخادم', 'error');
       }
     }
 
@@ -671,7 +1027,7 @@
       if (!messages || messages.length === 0) {
         tbody.innerHTML = `
           <tr>
-            <td colspan="4" class="no-messages">
+            <td colspan="5" class="no-messages">
               <i class="fas fa-inbox"></i>
               لا توجد رسائل بعد
             </td>
@@ -687,7 +1043,6 @@
         let date;
         if (msg.createdAt) {
           if (msg.createdAt._seconds) {
-            // تاريخ من Firebase
             date = new Date(msg.createdAt._seconds * 1000);
           } else {
             date = new Date(msg.createdAt);
@@ -698,12 +1053,18 @@
 
         const tr = document.createElement('tr');
         tr.style.animationDelay = `${index * 0.1}s`;
+        tr.setAttribute('data-id', msg.id || msg._id);
         
         tr.innerHTML = `
           <td><i class="fas fa-user-circle" style="color: var(--accent-neon); margin-left: 5px;"></i>${escapeHtml(msg.name) || 'غير معروف'}</td>
           <td><i class="fas fa-phone-alt" style="color: var(--accent-blue); margin-left: 5px;"></i>${escapeHtml(msg.phone) || 'غير متوفر'}</td>
           <td class="message-cell" title="${escapeHtml(msg.message)}">${escapeHtml(msg.message) || '...'}</td>
           <td><i class="fas fa-clock" style="color: var(--accent-neon); margin-left: 5px;"></i>${formatDate(date)}</td>
+          <td>
+            <button class="delete-btn" onclick="openDeleteModal('${msg.id || msg._id}')" title="حذف الرسالة">
+              <i class="fas fa-trash"></i>
+            </button>
+          </td>
         `;
         
         tbody.appendChild(tr);
@@ -715,7 +1076,6 @@
       const total = messages.length;
       document.getElementById('totalMessages').textContent = total;
       
-      // رسائل اليوم
       const today = new Date().toDateString();
       const todayCount = messages.filter(msg => {
         let msgDate;
@@ -732,15 +1092,67 @@
       }).length;
       document.getElementById('todayMessages').textContent = todayCount;
       
-      // مرسلين فريدين
       const uniqueSenders = new Set(messages.map(m => m.phone)).size;
       document.getElementById('uniqueSenders').textContent = uniqueSenders;
       
-      // آخر تحديث
       document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString('ar-EG', {
         hour: '2-digit',
         minute: '2-digit'
       });
+    }
+
+    // ===== فتح نافذة تأكيد الحذف =====
+    function openDeleteModal(messageId) {
+      currentDeleteId = messageId;
+      const modal = document.getElementById('deleteModal');
+      modal.classList.add('active');
+      
+      // البحث عن اسم المرسل لعرضه في رسالة التأكيد
+      const message = messagesList.find(m => (m.id || m._id) === messageId);
+      if (message && message.name) {
+        document.getElementById('deleteMessage').textContent = 
+          `هل أنت متأكد من حذف رسالة "${escapeHtml(message.name)}"?`;
+      }
+    }
+
+    // ===== إغلاق نافذة التأكيد =====
+    function closeDeleteModal() {
+      const modal = document.getElementById('deleteModal');
+      modal.classList.remove('active');
+      currentDeleteId = null;
+      document.getElementById('deleteMessage').textContent = 'هل أنت متأكد من حذف هذه الرسالة؟';
+    }
+
+    // ===== حذف الرسالة =====
+    async function deleteMessage() {
+      if (!currentDeleteId) return;
+      
+      const confirmBtn = document.getElementById('confirmDelete');
+      const originalText = confirmBtn.innerHTML;
+      confirmBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري...';
+      confirmBtn.disabled = true;
+      
+      try {
+        const res = await fetch(`/api/messages/${currentDeleteId}`, {
+          method: 'DELETE',
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+        
+        if (res.ok) {
+          showToast('تم حذف الرسالة بنجاح', 'success');
+          closeDeleteModal();
+          await loadMessages(); // إعادة تحميل الرسائل
+        } else {
+          const error = await res.json();
+          showToast(error.error || 'فشل حذف الرسالة', 'error');
+        }
+      } catch (err) {
+        console.error('Error deleting message:', err);
+        showToast('حدث خطأ في الاتصال بالخادم', 'error');
+      } finally {
+        confirmBtn.innerHTML = originalText;
+        confirmBtn.disabled = false;
+      }
     }
 
     // ===== عرض خطأ =====
@@ -748,7 +1160,7 @@
       const tbody = document.getElementById('messagesBody');
       tbody.innerHTML = `
         <tr>
-          <td colspan="4" class="no-messages" style="color: var(--button-danger);">
+          <td colspan="5" class="no-messages" style="color: var(--button-danger);">
             <i class="fas fa-exclamation-triangle"></i>
             ${message}
           </td>
@@ -795,6 +1207,24 @@
       localStorage.removeItem('token');
       window.location.href = '/login';
     }
+
+    // ===== إغلاق النافذة عند الضغط خارجها =====
+    document.getElementById('deleteModal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeDeleteModal();
+      }
+    });
+
+    // ===== أزرار النافذة =====
+    document.getElementById('confirmDelete').addEventListener('click', deleteMessage);
+    document.getElementById('cancelDelete').addEventListener('click', closeDeleteModal);
+
+    // ===== إغلاق النافذة بالضغط على ESC =====
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closeDeleteModal();
+      }
+    });
 
     // ===== تحديث تلقائي كل 30 ثانية =====
     loadMessages();
