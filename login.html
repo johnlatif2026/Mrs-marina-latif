@@ -44,19 +44,18 @@ button {
 <div class="box">
   <h2>تسجيل الدخول</h2>
 
-  <input id="email" placeholder="Username">
-  <input id="password" type="password" placeholder="Password">
+<input id="user" placeholder="username">
+<input id="pass" type="password">
 
-  <button onclick="login()">Login</button>
-</div>
+<button onclick="login()">Login</button>
 
 <script>
-async function login() {
-  const res = await fetch('/api/login', {
+async function login(){
+  const res = await fetch('/api/login',{
     method:'POST',
     body: JSON.stringify({
-      email: email.value,
-      password: password.value
+      user:user.value,
+      pass:pass.value
     })
   });
 
@@ -65,11 +64,8 @@ async function login() {
   if(data.token){
     localStorage.setItem("token", data.token);
     location.href="/dashboard.html";
-  } else {
-    alert("بيانات غلط");
   }
 }
 </script>
-
 </body>
 </html>
