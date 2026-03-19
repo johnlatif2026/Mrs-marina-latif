@@ -53,22 +53,30 @@ document.getElementById('contactForm').addEventListener('submit', async e => {
   const formData = new FormData(e.target);
   const data = {
     name: formData.get('name'),
-    email: formData.get('phone'),
+    phone: formData.get('phone'),
     message: formData.get('message')
   };
-  const res = await fetch('/api/messages', {
-    method: 'POST',
-    headers: {'Content-Type':'application/json'},
-    body: JSON.stringify(data)
-  });
-  if(res.ok){
-    document.getElementById('status').textContent = "تم إرسال الرسالة بنجاح!";
-    e.target.reset();
-  } else {
-    document.getElementById('status').textContent = "حدث خطأ، حاول مرة أخرى.";
+  
+  try {
+    const res = await fetch('/api/messages', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify(data)
+    });
+
+    if(res.ok){
+      document.getElementById('status').textContent = "تم إرسال الرسالة بنجاح!";
+      e.target.reset();
+    } else {
+      const err = await res.json();
+      document.getElementById('status').textContent = "حدث خطأ: " + (err.error || 'حاول مرة أخرى');
+      console.error("Server error:", err);
+    }
+  } catch(err){
+    document.getElementById('status').textContent = "حدث خطأ: " + err.message;
+    console.error("Fetch error:", err);
   }
 });
 </script>
-
 </body>
 </html>
