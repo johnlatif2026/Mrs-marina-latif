@@ -41,7 +41,7 @@ form.addEventListener('submit', async (e) => {
   if(res.ok){
     const json = await res.json();
     localStorage.setItem('token', json.token);
-    window.location.href = '/dashboard.html';
+    window.location.href = '/dashboard';
   } else {
     status.textContent = 'اسم المستخدم أو كلمة المرور غير صحيحة';
   }
