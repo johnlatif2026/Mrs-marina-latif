@@ -1,26 +1,74 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-  <meta charset="UTF-8">
-  <title>Portfolio Science Teacher</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>بورتفوليو مدرسة العلوم</title>
+<style>
+body { font-family: Arial, sans-serif; margin:0; padding:0; }
+header { background: #4CAF50; color:white; padding:20px; text-align:center; }
+section { padding:20px; }
+.profile img { width:200px; border-radius:50%; }
+.contact-form input, .contact-form textarea { width:100%; padding:10px; margin:5px 0; }
+.contact-form button { padding:10px 20px; background:#4CAF50; color:white; border:none; cursor:pointer; }
+.social a { margin-right:10px; text-decoration:none; color:#4CAF50; }
+</style>
 </head>
 <body>
-  <h1>مرحبا بكم في بورتفوليو مدرسة العلوم</h1>
 
-  <h2>آخر الدروس</h2>
-  <ul id="posts"></ul>
+<header>
+  <h1>مدرسة العلوم - مارينا لطيف</h1>
+</header>
 
-  <script>
-    fetch('/api/posts')
-      .then(res => res.json())
-      .then(posts => {
-        const ul = document.getElementById('posts');
-        posts.forEach(post => {
-          const li = document.createElement('li');
-          li.textContent = post.title + ' - ' + post.description;
-          ul.appendChild(li);
-        });
-      });
-  </script>
+<section class="profile">
+  <img src="profile.jpg" alt="صورة المدرسة">
+  <h2>مارينا لطيف</h2>
+  <p>العمر: 35 سنة</p>
+  <p>التعليم: بكالوريوس علوم</p>
+  <p>الخبرة: 10 سنوات في تدريس العلوم</p>
+  <p>تبدأ التدريس منذ: 2014</p>
+  <p>المواد: علوم، ساينس</p>
+</section>
+
+<section class="social">
+  <h3>تواصلوا معي عبر:</h3>
+  <a href="https://wa.me/0123456789" target="_blank">واتساب</a>
+  <a href="https://www.facebook.com/username" target="_blank">فيسبوك</a>
+</section>
+
+<section class="contact">
+  <h3>تواصل عبر الموقع</h3>
+  <form class="contact-form" id="contactForm">
+    <input type="text" name="name" placeholder="اسمك" required>
+    <input type="email" name="email" placeholder="البريد الإلكتروني" required>
+    <textarea name="message" rows="5" placeholder="رسالتك" required></textarea>
+    <button type="submit">إرسال</button>
+  </form>
+  <p id="status"></p>
+</section>
+
+<script>
+document.getElementById('contactForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  const formData = new FormData(e.target);
+  const data = {
+    name: formData.get('name'),
+    email: formData.get('email'),
+    message: formData.get('message')
+  };
+  const res = await fetch('/api/messages', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify(data)
+  });
+  if(res.ok) {
+    document.getElementById('status').textContent = "تم إرسال الرسالة بنجاح!";
+    e.target.reset();
+  } else {
+    document.getElementById('status').textContent = "حدث خطأ، حاول مرة أخرى.";
+  }
+});
+</script>
+
 </body>
 </html>
