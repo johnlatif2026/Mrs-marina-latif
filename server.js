@@ -11,31 +11,35 @@ dotenv.config();
 
 const app = express();
 app.use(bodyParser.json());
-app.use(express.static('.'));
 app.use(cookieParser());
 
-// Firebase
+// Serve static HTML files from project root
+app.use(express.static(path.join(__dirname, '/')));
+
+// Firebase setup
 const FIREBASE_CONFIG = JSON.parse(process.env.FIREBASE_CONFIG);
-admin.initializeApp({ credential: admin.credential.cert(FIREBASE_CONFIG) });
+admin.initializeApp({
+  credential: admin.credential.cert(FIREBASE_CONFIG)
+});
 const db = admin.firestore();
 
 const JWT_SECRET = process.env.JWT;
 
-// Middleware للتحقق من JWT
+// Middleware JWT
 function authenticateToken(req, res, next) {
   const token = req.headers['authorization']?.split(' ')[1];
   if (!token) return res.status(401).json({ error: 'Unauthorized' });
   jwt.verify(token, JWT_SECRET, (err, user) => {
-    if(err) return res.status(403).json({ error: 'Forbidden' });
+    if (err) return res.status(403).json({ error: 'Forbidden' });
     req.user = user;
     next();
   });
 }
 
 // API Login
-app.post('/api/login', (req,res) => {
+app.post('/api/login', (req, res) => {
   const { username, password } = req.body;
-  if(username === process.env.ADMIN_USER && password === process.env.ADMIN_PASS) {
+  if (username === process.env.ADMIN_USER && password === process.env.ADMIN_PASS) {
     const token = jwt.sign({ username }, JWT_SECRET, { expiresIn: '2h' });
     res.json({ token });
   } else {
@@ -43,8 +47,8 @@ app.post('/api/login', (req,res) => {
   }
 });
 
-// API لجلب الدروس
-app.get('/api/posts', async (req,res) => {
+// API: Get posts
+app.get('/api/posts', async (req, res) => {
   try {
     const posts = [];
     const snapshot = await db.collection('posts').orderBy('createdAt','desc').get();
@@ -55,13 +59,13 @@ app.get('/api/posts', async (req,res) => {
   }
 });
 
-// API لإضافة درس جديد
+// API: Add new post
 app.post('/api/posts', authenticateToken, async (req,res) => {
   try {
     const { title, description } = req.body;
     const docRef = await db.collection('posts').add({ title, description, createdAt: new Date() });
 
-    // إرسال إشعار Telegram
+    // Telegram notification
     await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_TOKEN_ID}/sendMessage`, {
       method:'POST',
       headers: { 'Content-Type':'application/json' },
@@ -77,6 +81,11 @@ app.post('/api/posts', authenticateToken, async (req,res) => {
   }
 });
 
-// تشغيل السيرفر
+// Fallback: serve index.html for unknown routes (useful for Vercel)
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+// Start server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
