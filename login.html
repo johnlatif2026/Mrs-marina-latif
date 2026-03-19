@@ -1,18 +1,59 @@
 <!DOCTYPE html>
 <html lang="ar">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login</title>
+
+<style>
+body {
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  background:#0f2027;
+  font-family:Arial;
+}
+
+.box {
+  background:white;
+  padding:30px;
+  border-radius:15px;
+  width:90%;
+  max-width:350px;
+  text-align:center;
+}
+
+input {
+  width:100%;
+  padding:10px;
+  margin:10px 0;
+}
+
+button {
+  width:100%;
+  padding:10px;
+  background:#00c9a7;
+  border:none;
+  cursor:pointer;
+}
+</style>
+</head>
+
 <body>
 
-<h2>Login</h2>
+<div class="box">
+  <h2>تسجيل الدخول</h2>
 
-<input id="email" placeholder="email"><br>
-<input id="password" type="password" placeholder="password"><br>
+  <input id="email" placeholder="Username">
+  <input id="password" type="password" placeholder="Password">
 
-<button onclick="login()">Login</button>
+  <button onclick="login()">Login</button>
+</div>
 
 <script>
 async function login() {
   const res = await fetch('/api/login', {
-    method: 'POST',
+    method:'POST',
     body: JSON.stringify({
       email: email.value,
       password: password.value
@@ -21,11 +62,11 @@ async function login() {
 
   const data = await res.json();
 
-  if (data.token) {
+  if(data.token){
     localStorage.setItem("token", data.token);
-    location.href = "/dashboard.html";
+    location.href="/dashboard.html";
   } else {
-    alert("فشل");
+    alert("بيانات غلط");
   }
 }
 </script>
