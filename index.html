@@ -1,92 +1,579 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>بورتفوليو مدرسة العلوم</title>
-<style>
-:root {
-  --bg-color:#121212;
-  --text-color:#e0e0e0;
-  --accent-color:#4CAF50;
-  --input-bg:#1f1f1f;
-  --input-border:#333;
-}
-* { box-sizing:border-box; margin:0; padding:0; }
-body { font-family: Arial, sans-serif; background:var(--bg-color); color:var(--text-color); line-height:1.6; }
-header { background: var(--accent-color); color:white; padding:20px; text-align:center; }
-section { padding:20px; max-width:800px; margin:auto; }
-.profile img { width:150px; border-radius:50%; display:block; margin:auto; }
-.contact-form input, .contact-form textarea { width:100%; padding:10px; margin:10px 0; border:1px solid var(--input-border); border-radius:5px; background:var(--input-bg); color:var(--text-color); }
-.contact-form button { padding:10px 20px; background:var(--accent-color); color:white; border:none; cursor:pointer; border-radius:5px; }
-.contact-form button:hover { background:#45a049; }
-.social a { margin-right:10px; text-decoration:none; color:var(--accent-color); }
-@media(max-width:600px){ .profile img{width:120px;} section{padding:10px;} }
-</style>
-</head>
-<body>
-
-<header>
-  <h1>مدرسة العلوم - البورتفوليو</h1>
-</header>
-
-<section class="profile">
-  <img src="profile.jpg" alt="صورة المدرسة">
-  <h2>اسم المدرسة</h2>
-  <p>العمر: 35 سنة</p>
-  <p>التعليم: بكالوريوس علوم</p>
-  <p>الخبرة: 10 سنوات في تدريس العلوم</p>
-  <p>تبدأ التدريس منذ: 2014</p>
-  <p>المواد: علوم، ساينس</p>
-</section>
-
-<section class="social">
-  <h3>تواصلوا معي عبر:</h3>
-  <a href="https://wa.me/201229971386" target="_blank">واتساب</a>
-  <a href="https://www.facebook.com/marinalatif" target="_blank">فيسبوك</a>
-</section>
-
-<section class="contact">
-  <h3>تواصل عبر الموقع</h3>
-  <form class="contact-form" id="contactForm">
-    <input type="text" name="name" placeholder="اسمك" required>
-    <input type="phone" name="phone" placeholder="رقم الهاتف" required>
-    <textarea name="message" rows="5" placeholder="رسالتك" required></textarea>
-    <button type="submit">إرسال</button>
-  </form>
-  <p id="status"></p>
-</section>
-
-<script>
-document.getElementById('contactForm').addEventListener('submit', async e => {
-  e.preventDefault();
-  const formData = new FormData(e.target);
-  const data = {
-    name: formData.get('name'),
-    phone: formData.get('phone'),
-    message: formData.get('message')
-  };
-  
-  try {
-    const res = await fetch('/api/messages', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify(data)
-    });
-    if(res.ok){
-      document.getElementById('status').textContent = "تم إرسال الرسالة بنجاح!";
-      e.target.reset();
-    } else {
-      const err = await res.json();
-      document.getElementById('status').textContent = "حدث خطأ: " + (err.error || 'حاول مرة أخرى');
-      console.error("Server error:", err);
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>Mrs Marina Latif</title>
+  <!-- Google Fonts: Poppins للعربية والأجنبية -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <!-- Font Awesome للأيقونات (اختياري ولكن مفيد) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    /* ===== المتغيرات الأساسية للثيم ===== */
+    :root {
+      /* الوضع الداكن (Dark Mode) - الإعدادات الافتراضية */
+      --bg-dark: #0a0f0c;
+      --bg-card: #1a2a1f;
+      --accent-neon: #4aff9e;
+      --accent-blue: #7bc5f5;
+      --text-light: #f0f7f0;
+      --text-dim: #b0e0b0;
+      --input-bg: #253b2a;
+      --shadow-3d: 0 20px 30px -10px rgba(0,255,150,0.3), 0 0 0 1px rgba(74,255,158,0.2) inset;
+      --bg-gradient-start: #1a3a2a;
+      --bg-gradient-end: #0a120e;
+      --body-bg-overlay: repeating-linear-gradient(45deg, transparent 0%, transparent 5%, rgba(74, 255, 158, 0.03) 5%, rgba(123, 197, 245, 0.03) 10%);
+      --header-gradient: linear-gradient(145deg, #1f4a2f, #0e301c);
+      --info-item-bg: rgba(0,0,0,0.4);
+      --contact-bg: rgba(20, 40, 25, 0.8);
     }
-  } catch(err){
-    document.getElementById('status').textContent = "حدث خطأ: " + err.message;
-    console.error("Fetch error:", err);
-  }
-});
-</script>
 
+    /* الوضع الفاتح (Light Mode) - متغيرات جديدة */
+    [data-theme="light"] {
+      --bg-dark: #f0f7f0;
+      --bg-card: #d4e8d4;
+      --accent-neon: #2a7a4a;
+      --accent-blue: #1a5a9a;
+      --text-light: #0a2f1a;
+      --text-dim: #2a5a3a;
+      --input-bg: #e0f0e0;
+      --shadow-3d: 0 20px 30px -10px rgba(0,100,50,0.3), 0 0 0 1px rgba(42,122,74,0.2) inset;
+      --bg-gradient-start: #a8d8b0;
+      --bg-gradient-end: #c8e8d0;
+      --body-bg-overlay: repeating-linear-gradient(45deg, transparent 0%, transparent 5%, rgba(42, 122, 74, 0.05) 5%, rgba(26, 90, 154, 0.05) 10%);
+      --header-gradient: linear-gradient(145deg, #6da67a, #4a8c5a);
+      --info-item-bg: rgba(255,255,255,0.6);
+      --contact-bg: rgba(200, 230, 210, 0.9);
+    }
+
+    /* ===== إعادة تعيين الأنماط ===== */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Poppins', Arial, sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-light);
+      line-height: 1.7;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: radial-gradient(circle at 30% 30%, var(--bg-gradient-start), var(--bg-gradient-end));
+      position: relative;
+      overflow-x: hidden;
+      transition: background-color 0.5s ease, color 0.3s ease;
+    }
+
+    /* تأثير خلفية متحركة */
+    body::before {
+      content: "";
+      position: fixed;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: var(--body-bg-overlay);
+      animation: rotateBackground 120s linear infinite;
+      z-index: -1;
+      transition: background 0.5s ease;
+    }
+
+    @keyframes rotateBackground {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* ===== مفتاح التبديل Dark/Light Mode ===== */
+    .theme-switch-wrapper {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 100;
+    }
+
+    .theme-switch {
+      display: inline-block;
+      height: 40px;
+      position: relative;
+      width: 80px;
+    }
+
+    .theme-switch input {
+      display: none;
+    }
+
+    .slider {
+      background: var(--bg-card);
+      bottom: 0;
+      cursor: pointer;
+      left: 0;
+      position: absolute;
+      right: 0;
+      top: 0;
+      transition: 0.4s;
+      border-radius: 40px;
+      box-shadow: 0 0 20px var(--accent-neon);
+      border: 2px solid var(--accent-neon);
+    }
+
+    .slider:before {
+      background: var(--accent-neon);
+      bottom: 4px;
+      content: "🌙";
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 28px;
+      left: 4px;
+      position: absolute;
+      transition: 0.4s;
+      width: 28px;
+      border-radius: 50%;
+      color: var(--bg-dark);
+      font-size: 16px;
+    }
+
+    input:checked + .slider:before {
+      content: "☀️";
+      transform: translateX(40px);
+    }
+
+    /* ===== الحاوية الرئيسية ===== */
+    .portfolio-container {
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+      animation: fadeInUp 1s ease-out;
+    }
+
+    /* ===== الهيدر المتحرك ===== */
+    .header-3d {
+      background: var(--header-gradient);
+      color: white;
+      padding: 40px 20px;
+      text-align: center;
+      border-radius: 60px 60px 30px 30px;
+      margin-bottom: 40px;
+      box-shadow: 0 30px 40px -20px black, 0 0 0 2px var(--accent-neon) inset;
+      position: relative;
+      overflow: hidden;
+      animation: floatHeader 6s infinite alternate;
+    }
+
+    .header-3d::before {
+      content: "🔬🧪";
+      position: absolute;
+      font-size: 80px;
+      opacity: 0.1;
+      bottom: -20px;
+      right: -20px;
+      transform: rotate(15deg);
+      animation: spinIcons 20s linear infinite;
+    }
+
+    @keyframes spinIcons {
+      0% { transform: rotate(15deg) scale(1); }
+      50% { transform: rotate(195deg) scale(1.2); }
+      100% { transform: rotate(375deg) scale(1); }
+    }
+
+    @keyframes floatHeader {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-10px); }
+    }
+
+    .header-3d h1 {
+      font-size: clamp(2rem, 8vw, 3.5rem);
+      font-weight: 700;
+      text-shadow: 0 5px 15px rgba(0,255,150,0.5);
+      letter-spacing: 2px;
+    }
+
+    /* ===== قسم البروفايل (بطاقة 3D) ===== */
+    .profile-card {
+      background: var(--bg-card);
+      padding: 30px 20px;
+      border-radius: 50px 20px 50px 20px;
+      box-shadow: var(--shadow-3d), 0 25px 40px -15px black;
+      text-align: center;
+      margin-bottom: 40px;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), background-color 0.5s ease;
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255,255,255,0.1);
+      transform-style: preserve-3d;
+      perspective: 1000px;
+    }
+
+    .profile-card:hover {
+      transform: translateY(-15px) rotateX(2deg) rotateY(2deg);
+      box-shadow: 0 35px 50px -15px var(--accent-neon);
+    }
+
+    .avatar {
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 5px solid var(--accent-neon);
+      box-shadow: 0 0 30px var(--accent-neon);
+      margin: 0 auto 20px;
+      display: block;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      animation: pulseGlow 3s infinite;
+    }
+
+    .avatar:hover {
+      transform: scale(1.1) rotate(5deg);
+      box-shadow: 0 0 50px var(--accent-blue);
+    }
+
+    @keyframes pulseGlow {
+      0% { box-shadow: 0 0 30px var(--accent-neon); }
+      50% { box-shadow: 0 0 60px var(--accent-blue); }
+      100% { box-shadow: 0 0 30px var(--accent-neon); }
+    }
+
+    .profile-card h2 {
+      font-size: 2.5rem;
+      margin-bottom: 5px;
+      background: linear-gradient(135deg, var(--text-light), var(--accent-neon));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .animated-text {
+      font-size: 1.2rem;
+      color: var(--text-dim);
+      margin-bottom: 20px;
+      border-right: 3px solid var(--accent-neon);
+      white-space: nowrap;
+      overflow: hidden;
+      width: fit-content;
+      margin-left: auto;
+      margin-right: auto;
+      animation: typing 3.5s steps(30, end), blink-caret 0.75s step-end infinite;
+    }
+
+    @keyframes typing {
+      from { width: 0; }
+      to { width: 300px; }
+    }
+
+    @keyframes blink-caret {
+      from, to { border-color: transparent; }
+      50% { border-color: var(--accent-neon); }
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .info-item {
+      background: var(--info-item-bg);
+      padding: 15px 5px;
+      border-radius: 20px;
+      box-shadow: 0 5px 10px rgba(0,0,0,0.5);
+      backdrop-filter: blur(5px);
+      transition: 0.3s, background-color 0.5s ease;
+      border: 1px solid var(--accent-neon);
+    }
+
+    .info-item:hover {
+      transform: scale(1.05) translateZ(20px);
+      background: var(--accent-neon);
+      color: var(--bg-dark);
+    }
+
+    /* ===== أزرار التواصل الاجتماعية ===== */
+    .social-3d {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 30px;
+      margin: 40px 0;
+      padding: 20px;
+    }
+
+    .social-button {
+      padding: 15px 35px;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 1.2rem;
+      letter-spacing: 1px;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      box-shadow: 0 10px 20px -5px rgba(0,0,0,0.8);
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .social-button::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: left 0.5s;
+    }
+
+    .social-button:hover::before {
+      left: 100%;
+    }
+
+    .social-button:hover {
+      transform: translateY(-10px) scale(1.1);
+      box-shadow: 0 20px 30px -5px var(--accent-neon);
+    }
+
+    .whatsapp { background: #25D366; color: white; }
+    .facebook { background: #1877F2; color: white; }
+
+    /* ===== نموذج الاتصال ===== */
+    .contact-3d {
+      background: var(--contact-bg);
+      backdrop-filter: blur(12px);
+      padding: 40px;
+      border-radius: 80px 20px 80px 20px;
+      box-shadow: 0 30px 40px -20px black, 0 0 0 2px var(--accent-neon) inset;
+      margin-top: 40px;
+      transition: background-color 0.5s ease;
+    }
+
+    .contact-3d h3 {
+      font-size: 2.2rem;
+      margin-bottom: 30px;
+      text-align: center;
+      text-shadow: 0 0 10px var(--accent-neon);
+      color: var(--text-light);
+    }
+
+    .contact-form input,
+    .contact-form textarea {
+      width: 100%;
+      padding: 18px;
+      margin: 15px 0;
+      border: none;
+      border-radius: 40px;
+      background: var(--input-bg);
+      color: var(--text-light);
+      font-size: 1.1rem;
+      border: 2px solid transparent;
+      transition: 0.3s, background-color 0.5s ease;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    }
+
+    .contact-form input:focus,
+    .contact-form textarea:focus {
+      outline: none;
+      border-color: var(--accent-neon);
+      box-shadow: 0 0 30px var(--accent-neon);
+      transform: scale(1.02);
+    }
+
+    .contact-form textarea {
+      border-radius: 40px;
+      resize: vertical;
+    }
+
+    .contact-form button {
+      padding: 18px 40px;
+      background: linear-gradient(145deg, var(--accent-neon), var(--accent-blue));
+      color: var(--bg-dark);
+      font-weight: bold;
+      font-size: 1.3rem;
+      border: none;
+      border-radius: 60px;
+      cursor: pointer;
+      transition: 0.5s;
+      box-shadow: 0 10px 20px -5px var(--accent-neon);
+      width: 100%;
+      letter-spacing: 2px;
+      animation: buttonPulse 2s infinite;
+    }
+
+    @keyframes buttonPulse {
+      0% { box-shadow: 0 0 20px var(--accent-neon); }
+      50% { box-shadow: 0 0 50px var(--accent-blue); }
+      100% { box-shadow: 0 0 20px var(--accent-neon); }
+    }
+
+    .contact-form button:hover {
+      transform: scale(1.05) translateY(-5px);
+      background: linear-gradient(145deg, var(--accent-blue), var(--accent-neon));
+      box-shadow: 0 30px 40px -5px var(--accent-neon);
+    }
+
+    #status {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 1.3rem;
+      color: #ffd966;
+    }
+
+    /* ===== تحسين الاستجابة لجميع الأجهزة ===== */
+    @media (max-width: 768px) {
+      .profile-card { padding: 20px; }
+      .avatar { width: 120px; height: 120px; }
+      .info-grid { grid-template-columns: 1fr; }
+      .social-3d { flex-direction: column; align-items: center; }
+      .social-button { width: 80%; text-align: center; }
+      .contact-3d { padding: 20px; }
+      .theme-switch-wrapper { justify-content: center; }
+    }
+
+    @media (min-width: 1920px) {
+      .portfolio-container { max-width: 1500px; }
+      .avatar { width: 220px; height: 220px; }
+      .profile-card h2 { font-size: 4rem; }
+    }
+
+    @media (orientation: landscape) and (max-height: 600px) {
+      .header-3d { padding: 20px; }
+      .avatar { width: 100px; height: 100px; }
+    }
+
+    /* ===== تأثيرات ظهور ===== */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body data-theme="dark">
+  <div class="portfolio-container">
+    
+    <!-- مفتاح التبديل Dark/Light Mode -->
+    <div class="theme-switch-wrapper">
+      <label class="theme-switch" for="checkbox">
+        <input type="checkbox" id="checkbox" />
+        <div class="slider"></div>
+      </label>
+    </div>
+
+    <!-- الرأس المتحرك -->
+    <header class="header-3d">
+      <h1>🔬 مدرسة البراعة للعلوم</h1>
+      <p>حيث تلتقي المعرفة بالإبداع</p>
+    </header>
+
+    <!-- بطاقة البروفايل 3D -->
+    <section class="profile-card">
+      <!-- استخدم أي صورة رمزية، ضع ملف profile.jpg في نفس المجلد -->
+      <img src="https://i.postimg.cc/Tw6V7vkb/FB-IMG-1773949668957.jpg" alt="Marina Latif" class="avatar" onerror="this.src='https://via.placeholder.com/200x200/1f4a2f/4aff9e?text=🔬'">
+      <h2>مدرسة العلوم التطبيقية</h2>
+      <div class="animated-text">🔬 10 سنوات من التميز</div>
+      
+      <div class="info-grid">
+        <div class="info-item"><strong>العمر:</strong> 35 سنة</div>
+        <div class="info-item"><strong>التعليم:</strong> بكالوريوس علوم</div>
+        <div class="info-item"><strong>الخبرة:</strong> 10 سنوات</div>
+        <div class="info-item"><strong>منذ:</strong> 2014</div>
+        <div class="info-item"><strong>المواد:</strong> علوم، ساينس</div>
+      </div>
+    </section>
+
+    <!-- روابط التواصل بتأثير 3D -->
+    <div class="social-3d">
+      <a href="https://wa.me/201229971386" target="_blank" class="social-button whatsapp"><i class="fab fa-whatsapp"></i> واتساب</a>
+      <a href="https://www.facebook.com/marinalatif" target="_blank" class="social-button facebook"><i class="fab fa-facebook"></i> فيسبوك</a>
+    </div>
+
+    <!-- نموذج الاتصال -->
+    <section class="contact-3d">
+      <h3>📬 أرسل رسالتك</h3>
+      <form class="contact-form" id="contactForm">
+        <input type="text" name="name" placeholder="اسمك الكريم" required>
+        <input type="tel" name="phone" placeholder="رقم الهاتف" required>
+        <textarea name="message" rows="5" placeholder="رسالتك... استفسار، اقتراح، تواصل" required></textarea>
+        <button type="submit">🚀 إرسال الآن</button>
+      </form>
+      <p id="status"></p>
+    </section>
+  </div>
+
+  <script>
+    // ===== Dark/Light Mode Toggle =====
+    const toggleSwitch = document.querySelector('#checkbox');
+    const currentTheme = localStorage.getItem('theme');
+
+    if (currentTheme) {
+      document.documentElement.setAttribute('data-theme', currentTheme);
+      if (currentTheme === 'light') {
+        toggleSwitch.checked = true;
+      }
+    }
+
+    function switchTheme(e) {
+      if (e.target.checked) {
+        document.documentElement.setAttribute('data-theme', 'light');
+        localStorage.setItem('theme', 'light');
+      } else {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        localStorage.setItem('theme', 'dark');
+      }    
+    }
+
+    toggleSwitch.addEventListener('change', switchTheme, false);
+
+    // ===== نموذج الاتصال =====
+    document.getElementById('contactForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const form = e.target;
+      const formData = new FormData(form);
+      const data = {
+        name: formData.get('name'),
+        phone: formData.get('phone'),
+        message: formData.get('message')
+      };
+      
+      const statusEl = document.getElementById('status');
+      statusEl.style.color = '#ffd966';
+      statusEl.textContent = "جاري الإرسال...";
+      
+      try {
+        const res = await fetch('/api/messages', {
+          method: 'POST',
+          headers: {'Content-Type':'application/json'},
+          body: JSON.stringify(data)
+        });
+        
+        if(res.ok){
+          statusEl.textContent = "✅ تم إرسال الرسالة بنجاح! سنتواصل معك قريبًا.";
+          statusEl.style.color = '#4aff9e';
+          form.reset();
+        } else {
+          const err = await res.json();
+          statusEl.textContent = "❌ خطأ: " + (err.error || 'حاول مرة أخرى');
+          statusEl.style.color = '#ff6b6b';
+          console.error("Server error:", err);
+        }
+      } catch(err){
+        statusEl.textContent = "❌ حدث خطأ في الشبكة: " + err.message;
+        statusEl.style.color = '#ff6b6b';
+        console.error("Fetch error:", err);
+      }
+    });
+  </script>
 </body>
 </html>
