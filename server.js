@@ -13,8 +13,8 @@ export default async function handler(req, res) {
     const { email, password } = JSON.parse(body);
 
     if (
-      email === process.env.ADMIN_EMAIL &&
-      password === process.env.ADMIN_PASSWORD
+      email === process.env.ADMIN_USER
+password === process.env.ADMIN_PASS
     ) {
       const token = jwt.sign(
         { email },
