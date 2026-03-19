@@ -43,28 +43,18 @@ button {
 
 <div class="box">
   <h2>تسجيل الدخول</h2>
-
-<input id="user" placeholder="username">
+<input id="user" placeholder="Username">
 <input id="pass" type="password">
-
 <button onclick="login()">Login</button>
 
 <script>
 async function login(){
   const res = await fetch('/api/login',{
     method:'POST',
-    body: JSON.stringify({
-      user:user.value,
-      pass:pass.value
-    })
+    body: JSON.stringify({user:user.value, pass:pass.value})
   });
-
   const data = await res.json();
-
-  if(data.token){
-    localStorage.setItem("token", data.token);
-    location.href="/dashboard.html";
-  }
+  if(data.token){ localStorage.setItem("token",data.token); location.href="/dashboard.html"; }
 }
 </script>
 </body>
