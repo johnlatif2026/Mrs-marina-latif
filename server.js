@@ -9,7 +9,6 @@ const jwt = require('jsonwebtoken');
 dotenv.config();
 const app = express();
 app.use(bodyParser.json());
-app.use(express.static(path.join(__dirname, '/')));
 
 // Firebase setup
 const FIREBASE_CONFIG = JSON.parse(process.env.FIREBASE_CONFIG);
@@ -76,10 +75,8 @@ app.get('/api/messages', authenticateToken, async (req,res)=>{
   }
 });
 
-// Serve static HTML
-app.get('/login',(req,res)=> res.sendFile(path.join(__dirname,'login.html')));
-app.get('/dashboard',(req,res)=> res.sendFile(path.join(__dirname,'dashboard.html')));
-app.get('*',(req,res)=> res.sendFile(path.join(__dirname,'index.html')));
+// Serve static HTML من نفس المكان
+app.get('*', (req,res)=> res.sendFile(path.join(__dirname,'index.html')));
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT,()=>console.log(`Server running on port ${PORT}`));
+// **حذف app.listen()**
+module.exports = app;
