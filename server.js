@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const admin = require('firebase-admin');
-const fetch = require('node-fetch');
+const fetch = require('node-fetch'); // نسخة 2.x CommonJS
 const dotenv = require('dotenv');
 const path = require('path');
 const jwt = require('jsonwebtoken');
@@ -37,6 +37,7 @@ app.post('/api/messages', async (req,res)=>{
     await db.collection('messages').add({
       name, phone, message, createdAt: admin.firestore.Timestamp.fromDate(now)
     });
+
     await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_TOKEN_ID}/sendMessage`,{
       method:'POST',
       headers:{'Content-Type':'application/json'},
@@ -45,6 +46,7 @@ app.post('/api/messages', async (req,res)=>{
         text: `رسالة جديدة من ${name} (${phone}):\n${message}`
       })
     });
+
     res.status(200).json({ success:true });
   } catch(err){
     console.error("Error saving message:", err);
@@ -78,5 +80,5 @@ app.get('/api/messages', authenticateToken, async (req,res)=>{
 // Serve static HTML من نفس المكان
 app.get('*', (req,res)=> res.sendFile(path.join(__dirname,'index.html')));
 
-// **حذف app.listen()**
+// **مهم جداً:** لا تضع app.listen() على Vercel
 module.exports = app;
