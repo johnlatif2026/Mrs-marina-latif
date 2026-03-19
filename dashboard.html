@@ -1,75 +1,52 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard</title>
-
-<style>
-body {
-  font-family:Arial;
-  margin:0;
-  background:#f4f4f4;
-}
-
-header {
-  background:#0f2027;
-  color:white;
-  padding:15px;
-  text-align:center;
-}
-
-.container {
-  padding:20px;
-}
-
-.card {
-  background:white;
-  padding:20px;
-  border-radius:10px;
-  margin-bottom:15px;
-}
-
-button {
-  padding:10px;
-  background:red;
-  color:white;
-  border:none;
-}
-</style>
+  <meta charset="UTF-8">
+  <title>Dashboard</title>
 </head>
-
 <body>
+  <h1>لوحة التحكم</h1>
 
-<header>
-  <h2>Dashboard</h2>
-</header>
+  <h2>إضافة درس جديد</h2>
+  <form id="addPostForm">
+    <input type="text" name="title" placeholder="عنوان الدرس" required>
+    <input type="text" name="description" placeholder="وصف الدرس" required>
+    <button type="submit">إضافة</button>
+  </form>
 
-<div class="container">
-<div class="card">📊 إحصائيات الموقع</div>
-<h2>📩 الرسائل</h2>
-<button onclick="logout()">Logout</button>
-<div id="msgs"></div>
+  <h2>قائمة الدروس</h2>
+  <ul id="posts"></ul>
 
-<script>
-const token = localStorage.getItem("token");
-if(!token) location.href="/login.html";
+  <script>
+    async function loadPosts() {
+      const res = await fetch('/api/posts', { headers: { 'Authorization': 'Bearer ' + localStorage.getItem('token') } });
+      const posts = await res.json();
+      const ul = document.getElementById('posts');
+      ul.innerHTML = '';
+      posts.forEach(post => {
+        const li = document.createElement('li');
+        li.textContent = post.title + ' - ' + post.description;
+        ul.appendChild(li);
+      });
+    }
 
-async function load(){
-  const res = await fetch('/api/messages');
-  const data = await res.json();
-  const msgs = document.getElementById("msgs");
-  msgs.innerHTML="";
-  data.forEach(m=>{
-    const div=document.createElement("div");
-    div.innerHTML=`<p>${m.name}</p><p>${m.phone}</p><p>${m.message}</p>
-    <button onclick="del('${m.id}')">❌ حذف</button><hr>`;
-    msgs.appendChild(div);
-  });
-}
-async function del(id){ await fetch('/api/delete?id='+id); load(); }
-function logout(){ localStorage.removeItem("token"); location.href="/"; }
+    document.getElementById('addPostForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      const data = { title: formData.get('title'), description: formData.get('description') };
+      await fetch('/api/posts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + localStorage.getItem('token')
+        },
+        body: JSON.stringify(data)
+      });
+      e.target.reset();
+      loadPosts();
+    });
 
-load();
-</script>
+    loadPosts();
+  </script>
 </body>
 </html>
