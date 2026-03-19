@@ -1,63 +1,71 @@
+import express from "express";
+import bodyParser from "body-parser";
 import jwt from "jsonwebtoken";
+import admin from "firebase-admin";
 import fetch from "node-fetch";
-import { initializeApp, cert } from "firebase-admin/app";
-import { getFirestore } from "firebase-admin/firestore";
+import dotenv from "dotenv";
 
-const serviceAccount = JSON.parse(process.env.FIREBASE_CONFIG);
-serviceAccount.private_key = serviceAccount.private_key.replace(/\\n/g,'\n');
+dotenv.config();
 
-initializeApp({ credential: cert(serviceAccount) });
-const db = getFirestore();
+const app = express();
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.set("view engine", "ejs");
 
-export default async function handler(req, res) {
-  const url = req.url;
+const FIREBASE_CONFIG = JSON.parse(process.env.FIREBASE_CONFIG);
+admin.initializeApp({
+  credential: admin.credential.cert(FIREBASE_CONFIG)
+});
+const db = admin.firestore();
 
-  // LOGIN
-  if(url==="/api/login" && req.method==="POST"){
-    let body=""; for await(const c of req) body+=c;
-    const { user, pass } = JSON.parse(body);
+const PORT = process.env.PORT || 3000;
+const JWT_SECRET = process.env.JWT;
 
-    if(user===process.env.ADMIN_USER && pass===process.env.ADMIN_PASS){
-      const token = jwt.sign({user}, process.env.JWT, {expiresIn:"2h"});
-      return res.end(JSON.stringify({token}));
-    }
-    res.statusCode=401; return res.end();
-  }
-
-  // VERIFY
-  if(url==="/api/verify"){
-    const token = req.headers.authorization?.split(" ")[1];
-    try { jwt.verify(token, process.env.JWT); return res.end(JSON.stringify({ok:true})); }
-    catch{ res.statusCode=401; return res.end(); }
-  }
-
-  // CONTACT FORM
-  if(url==="/api/contact" && req.method==="POST"){
-    let body=""; for await(const c of req) body+=c;
-    const data=JSON.parse(body);
-    await db.collection("messages").add({...data,date:new Date()});
-
-    await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_TOKEN_ID}/sendMessage`,{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({chat_id:process.env.TELEGRAM_CHAT_ID,text:`📩 رسالة جديدة:\n${data.name}\n${data.phone}\n${data.message}`})
-    });
-    return res.end(JSON.stringify({ok:true}));
-  }
-
-  // GET MESSAGES
-  if(url==="/api/messages"){
-    const snapshot = await db.collection("messages").get();
-    const messages = snapshot.docs.map(doc=>({id:doc.id,...doc.data()}));
-    return res.end(JSON.stringify(messages));
-  }
-
-  // DELETE MESSAGE
-  if(url.startsWith("/api/delete")){
-    const id=url.split("=")[1];
-    await db.collection("messages").doc(id).delete();
-    return res.end(JSON.stringify({deleted:true}));
-  }
-
-  res.statusCode=404; res.end("Not Found");
+// Middleware للتحقق من JWT
+function authenticateToken(req, res, next) {
+  const token = req.cookies?.token || req.headers['authorization'];
+  if (!token) return res.redirect("/login");
+  jwt.verify(token, JWT_SECRET, (err, user) => {
+    if (err) return res.redirect("/login");
+    req.user = user;
+    next();
+  });
 }
+
+// Routes
+app.get("/", (req, res) => {
+  res.render("index"); // الصفحة الرئيسية
+});
+
+app.get("/login", (req, res) => {
+  res.render("login"); // صفحة تسجيل الدخول
+});
+
+app.post("/login", (req, res) => {
+  const { username, password } = req.body;
+  if (username === process.env.ADMIN_USER && password === process.env.ADMIN_PASS) {
+    const token = jwt.sign({ username }, JWT_SECRET, { expiresIn: "2h" });
+    res.cookie("token", token);
+    return res.redirect("/dashboard");
+  }
+  res.send("Invalid credentials");
+});
+
+app.get("/dashboard", authenticateToken, async (req, res) => {
+  const posts = [];
+  const snapshot = await db.collection("posts").get();
+  snapshot.forEach(doc => posts.push({ id: doc.id, ...doc.data() }));
+  res.render("dashboard", { posts });
+});
+
+// Telegram notification function
+async function sendTelegramMessage(message) {
+  const url = `https://api.telegram.org/bot${process.env.TELEGRAM_TOKEN_ID}/sendMessage`;
+  await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ chat_id: process.env.TELEGRAM_CHAT_ID, text: message })
+  });
+}
+
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
