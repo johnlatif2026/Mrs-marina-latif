@@ -1,94 +1,804 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard - الرسائل</title>
-<style>
-:root {
-  --bg-color:#121212;
-  --text-color:#e0e0e0;
-  --accent-color:#4CAF50;
-  --table-bg:#1f1f1f;
-  --table-border:#333;
-  --button-bg:#f44336;
-  --button-hover:#e53935;
-}
-body { font-family: Arial, sans-serif; background:var(--bg-color); color:var(--text-color); margin:0; padding:0; }
-header { background:var(--accent-color); color:white; padding:20px; text-align:center; position:relative; }
-.logout { position:absolute; right:20px; top:20px; background:var(--button-bg); color:white; border:none; padding:8px 15px; border-radius:5px; cursor:pointer; }
-.logout:hover { background:var(--button-hover); }
-.container { padding:20px; max-width:1000px; margin:auto; overflow-x:auto; }
-table { width:100%; border-collapse: collapse; background:var(--table-bg); }
-th, td { padding:10px; border-bottom:1px solid var(--table-border); text-align:left; }
-th { background:var(--accent-color); color:white; }
-tr:hover { background:#2a2a2a; }
-@media(max-width:600px){ th, td{ font-size:14px; padding:8px; } }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>لوحة التحكم </title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <!-- Font Awesome للأيقونات -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    /* ===== المتغيرات الأساسية ===== */
+    :root {
+      /* Dark mode (افتراضي) */
+      --bg-dark: #0a0f0c;
+      --bg-card: #1a2a1f;
+      --accent-neon: #4aff9e;
+      --accent-blue: #7bc5f5;
+      --text-light: #f0f7f0;
+      --text-dim: #b0e0b0;
+      --table-bg: #1a2a1f;
+      --table-border: #2a4a35;
+      --table-hover: #2a4a35;
+      --button-danger: #ff6b6b;
+      --button-danger-hover: #ff5252;
+      --button-success: #4aff9e;
+      --shadow-3d: 0 20px 30px -10px rgba(0,255,150,0.3), 0 0 0 1px rgba(74,255,158,0.2) inset;
+      --bg-gradient-start: #1a3a2a;
+      --bg-gradient-end: #0a120e;
+      --body-bg-overlay: repeating-linear-gradient(45deg, transparent 0%, transparent 5%, rgba(74, 255, 158, 0.03) 5%, rgba(123, 197, 245, 0.03) 10%);
+      --header-gradient: linear-gradient(145deg, #1f4a2f, #0e301c);
+      --stat-card-bg: #1a2a1f;
+    }
+
+    /* Light mode */
+    [data-theme="light"] {
+      --bg-dark: #f0f7f0;
+      --bg-card: #d4e8d4;
+      --accent-neon: #2a7a4a;
+      --accent-blue: #1a5a9a;
+      --text-light: #0a2f1a;
+      --text-dim: #2a5a3a;
+      --table-bg: #e0f0e0;
+      --table-border: #a0c0a0;
+      --table-hover: #c0e0c0;
+      --button-danger: #d32f2f;
+      --button-danger-hover: #b71c1c;
+      --button-success: #2e7d32;
+      --shadow-3d: 0 20px 30px -10px rgba(0,100,50,0.3), 0 0 0 1px rgba(42,122,74,0.2) inset;
+      --bg-gradient-start: #a8d8b0;
+      --bg-gradient-end: #c8e8d0;
+      --body-bg-overlay: repeating-linear-gradient(45deg, transparent 0%, transparent 5%, rgba(42, 122, 74, 0.05) 5%, rgba(26, 90, 154, 0.05) 10%);
+      --header-gradient: linear-gradient(145deg, #6da67a, #4a8c5a);
+      --stat-card-bg: #ffffff;
+    }
+
+    /* ===== إعادة تعيين الأنماط ===== */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Poppins', Arial, sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-light);
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+      background: radial-gradient(circle at 30% 30%, var(--bg-gradient-start), var(--bg-gradient-end));
+      position: relative;
+      overflow-x: hidden;
+      transition: background-color 0.5s ease, color 0.3s ease;
+    }
+
+    /* خلفية متحركة */
+    body::before {
+      content: "";
+      position: fixed;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: var(--body-bg-overlay);
+      animation: rotateBackground 120s linear infinite;
+      z-index: -1;
+      transition: background 0.5s ease;
+    }
+
+    @keyframes rotateBackground {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* ===== مفتاح Dark/Light Mode ===== */
+    .theme-switch-wrapper {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      z-index: 1000;
+    }
+
+    .theme-switch {
+      display: inline-block;
+      height: 40px;
+      position: relative;
+      width: 80px;
+    }
+
+    .theme-switch input {
+      display: none;
+    }
+
+    .slider {
+      background: var(--bg-card);
+      cursor: pointer;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      top: 0;
+      transition: 0.4s;
+      border-radius: 40px;
+      box-shadow: 0 0 20px var(--accent-neon);
+      border: 2px solid var(--accent-neon);
+    }
+
+    .slider:before {
+      background: var(--accent-neon);
+      bottom: 4px;
+      content: "🌙";
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 28px;
+      left: 4px;
+      position: absolute;
+      transition: 0.4s;
+      width: 28px;
+      border-radius: 50%;
+      color: var(--bg-dark);
+      font-size: 16px;
+    }
+
+    input:checked + .slider:before {
+      content: "☀️";
+      transform: translateX(40px);
+    }
+
+    /* ===== الهيدر ===== */
+    .header-3d {
+      background: var(--header-gradient);
+      color: white;
+      padding: 30px 20px;
+      text-align: center;
+      border-radius: 0 0 60px 60px;
+      margin-bottom: 40px;
+      box-shadow: 0 30px 40px -20px black, 0 0 0 2px var(--accent-neon) inset;
+      position: relative;
+      overflow: hidden;
+      animation: floatHeader 6s infinite alternate;
+    }
+
+    .header-3d::before {
+      content: "📧📨💬";
+      position: absolute;
+      font-size: 80px;
+      opacity: 0.1;
+      bottom: -20px;
+      left: -20px;
+      transform: rotate(-15deg);
+      animation: spinIcons 20s linear infinite;
+    }
+
+    @keyframes spinIcons {
+      0% { transform: rotate(-15deg) scale(1); }
+      50% { transform: rotate(165deg) scale(1.2); }
+      100% { transform: rotate(345deg) scale(1); }
+    }
+
+    @keyframes floatHeader {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-5px); }
+    }
+
+    .header-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .header-content h1 {
+      font-size: clamp(1.8rem, 5vw, 2.8rem);
+      font-weight: 700;
+      text-shadow: 0 5px 15px rgba(0,255,150,0.5);
+      letter-spacing: 2px;
+    }
+
+    .logout-btn {
+      background: var(--button-danger);
+      color: white;
+      border: none;
+      padding: 12px 30px;
+      border-radius: 50px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 20px -5px rgba(255,107,107,0.5);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      position: absolute;
+      left: 30px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .logout-btn:hover {
+      background: var(--button-danger-hover);
+      transform: translateY(-50%) scale(1.05);
+      box-shadow: 0 20px 30px -5px var(--button-danger);
+    }
+
+    .logout-btn i {
+      font-size: 1.2rem;
+    }
+
+    /* ===== إحصائيات سريعة ===== */
+    .stats-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      max-width: 1200px;
+      margin: 0 auto 40px;
+      padding: 0 20px;
+    }
+
+    .stat-card {
+      background: var(--stat-card-bg);
+      padding: 25px;
+      border-radius: 30px 15px 30px 15px;
+      box-shadow: var(--shadow-3d);
+      text-align: center;
+      transition: all 0.4s ease;
+      border: 1px solid rgba(255,255,255,0.1);
+      backdrop-filter: blur(5px);
+      animation: fadeInUp 0.8s ease-out;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-10px) rotateX(2deg);
+      box-shadow: 0 35px 50px -15px var(--accent-neon);
+    }
+
+    .stat-icon {
+      font-size: 2.5rem;
+      color: var(--accent-neon);
+      margin-bottom: 15px;
+      animation: pulseIcon 2s infinite;
+    }
+
+    @keyframes pulseIcon {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+
+    .stat-number {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--accent-blue);
+      line-height: 1;
+      margin-bottom: 5px;
+    }
+
+    .stat-label {
+      color: var(--text-dim);
+      font-size: 1rem;
+      letter-spacing: 1px;
+    }
+
+    /* ===== حاوية الجدول ===== */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      animation: fadeInUp 1s ease-out 0.2s both;
+    }
+
+    .table-wrapper {
+      background: var(--bg-card);
+      border-radius: 50px 20px 50px 20px;
+      padding: 30px;
+      box-shadow: var(--shadow-3d), 0 25px 40px -15px black;
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255,255,255,0.1);
+      overflow-x: auto;
+      transition: all 0.4s ease;
+    }
+
+    .table-wrapper:hover {
+      box-shadow: 0 35px 50px -15px var(--accent-neon);
+    }
+
+    /* ===== الجدول ===== */
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 10px;
+    }
+
+    th {
+      padding: 15px;
+      background: var(--accent-neon);
+      color: var(--bg-dark);
+      font-weight: 600;
+      font-size: 1rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    th:first-child {
+      border-radius: 30px 0 0 0;
+    }
+
+    th:last-child {
+      border-radius: 0 30px 0 0;
+    }
+
+    th i {
+      margin-left: 8px;
+      font-size: 1rem;
+    }
+
+    td {
+      padding: 15px;
+      background: var(--table-bg);
+      color: var(--text-light);
+      font-size: 0.95rem;
+      text-align: center;
+      border-bottom: 2px solid var(--table-border);
+      transition: all 0.3s ease;
+    }
+
+    tr {
+      transition: all 0.3s ease;
+      animation: slideIn 0.5s ease-out;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    tr:hover td {
+      background: var(--table-hover);
+      transform: scale(1.02);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+
+    /* تنسيق خاص للرسالة */
+    .message-cell {
+      max-width: 300px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      position: relative;
+      cursor: help;
+    }
+
+    .message-cell:hover {
+      white-space: normal;
+      overflow: visible;
+      background: var(--bg-card);
+      position: relative;
+      z-index: 10;
+      box-shadow: 0 5px 25px rgba(0,0,0,0.5);
+    }
+
+    /* حالة عدم وجود رسائل */
+    .no-messages {
+      text-align: center;
+      padding: 50px !important;
+      font-size: 1.2rem;
+      color: var(--text-dim);
+    }
+
+    .no-messages i {
+      font-size: 3rem;
+      color: var(--accent-neon);
+      margin-bottom: 15px;
+      display: block;
+    }
+
+    /* ===== تحسين الاستجابة ===== */
+    @media (max-width: 768px) {
+      .header-3d {
+        padding: 80px 20px 30px;
+      }
+      
+      .logout-btn {
+        position: static;
+        transform: none;
+        margin-top: 15px;
+        width: 100%;
+        justify-content: center;
+      }
+      
+      .theme-switch-wrapper {
+        top: 10px;
+        left: 10px;
+      }
+      
+      .table-wrapper {
+        padding: 15px;
+      }
+      
+      th, td {
+        padding: 10px;
+        font-size: 0.85rem;
+      }
+      
+      .message-cell {
+        max-width: 150px;
+      }
+      
+      .stats-container {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        padding: 0 10px;
+      }
+      
+      .stat-card {
+        padding: 15px;
+      }
+      
+      .stat-number {
+        font-size: 1.8rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .header-content h1 {
+        font-size: 1.5rem;
+      }
+      
+      .table-wrapper {
+        padding: 10px;
+        border-radius: 30px 10px 30px 10px;
+      }
+      
+      th, td {
+        padding: 8px 5px;
+        font-size: 0.75rem;
+      }
+      
+      th i {
+        display: none;
+      }
+      
+      .message-cell {
+        max-width: 100px;
+      }
+      
+      .stats-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (min-width: 1920px) {
+      .container, .stats-container {
+        max-width: 1600px;
+      }
+      
+      table {
+        font-size: 1.1rem;
+      }
+      
+      th, td {
+        padding: 20px;
+      }
+    }
+
+    @media (orientation: landscape) and (max-height: 600px) {
+      .header-3d {
+        padding: 20px;
+      }
+      
+      .stats-container {
+        margin-bottom: 20px;
+      }
+      
+      .table-wrapper {
+        padding: 15px;
+      }
+    }
+
+    /* ===== تأثيرات الظهور ===== */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ===== شريط التمرير المخصص ===== */
+    ::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg-card);
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--accent-neon);
+      border-radius: 10px;
+      border: 2px solid var(--bg-card);
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--accent-blue);
+    }
+  </style>
 </head>
-<body>
+<body data-theme="dark">
+  <!-- مفتاح Dark/Light Mode -->
+  <div class="theme-switch-wrapper">
+    <label class="theme-switch" for="checkbox">
+      <input type="checkbox" id="checkbox" />
+      <div class="slider"></div>
+    </label>
+  </div>
 
-<header>
-  <h1>لوحة الرسائل الواردة</h1>
-  <button class="logout" onclick="logout()">تسجيل الخروج</button>
-</header>
+  <!-- الهيدر -->
+  <header class="header-3d">
+    <div class="header-content">
+      <h1><i class="fas fa-envelope-open-text"></i> لوحة الرسائل الواردة</h1>
+      <button class="logout-btn" onclick="logout()">
+        <i class="fas fa-sign-out-alt"></i>
+        <span>تسجيل الخروج</span>
+      </button>
+    </div>
+  </header>
 
-<div class="container">
-  <table>
-    <thead>
-      <tr>
-        <th>الاسم</th>
-        <th>رقم الهاتف</th>
-        <th>الرسالة</th>
-        <th>تاريخ الإرسال</th>
-      </tr>
-    </thead>
-    <tbody id="messagesBody">
-    </tbody>
-  </table>
-</div>
+  <!-- إحصائيات سريعة -->
+  <div class="stats-container">
+    <div class="stat-card">
+      <div class="stat-icon"><i class="fas fa-envelope"></i></div>
+      <div class="stat-number" id="totalMessages">0</div>
+      <div class="stat-label">إجمالي الرسائل</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon"><i class="fas fa-calendar-week"></i></div>
+      <div class="stat-number" id="todayMessages">0</div>
+      <div class="stat-label">رسائل اليوم</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon"><i class="fas fa-users"></i></div>
+      <div class="stat-number" id="uniqueSenders">0</div>
+      <div class="stat-label">المرسلين</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon"><i class="fas fa-clock"></i></div>
+      <div class="stat-number" id="lastUpdate">-</div>
+      <div class="stat-label">آخر تحديث</div>
+    </div>
+  </div>
 
-<script>
-const token = localStorage.getItem('token');
-if(!token) window.location.href = '/login';
+  <!-- الجدول -->
+  <div class="container">
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th><i class="fas fa-user"></i> الاسم</th>
+            <th><i class="fas fa-phone"></i> رقم الهاتف</th>
+            <th><i class="fas fa-comment"></i> الرسالة</th>
+            <th><i class="fas fa-calendar"></i> تاريخ الإرسال</th>
+          </tr>
+        </thead>
+        <tbody id="messagesBody">
+          <tr>
+            <td colspan="4" class="no-messages">
+              <i class="fas fa-inbox"></i>
+              جاري تحميل الرسائل...
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 
-async function loadMessages(){
-  try {
-    const res = await fetch('/api/messages', { headers:{ 'Authorization':'Bearer ' + token } });
-    if(res.ok){
-      const messages = await res.json();
+  <script>
+    // ===== التحقق من التوكن =====
+    const token = localStorage.getItem('token');
+    if (!token) {
+      window.location.href = '/login';
+    }
+
+    // ===== Dark/Light Mode Toggle =====
+    const toggleSwitch = document.querySelector('#checkbox');
+    const currentTheme = localStorage.getItem('theme');
+
+    if (currentTheme) {
+      document.documentElement.setAttribute('data-theme', currentTheme);
+      if (currentTheme === 'light') {
+        toggleSwitch.checked = true;
+      }
+    }
+
+    function switchTheme(e) {
+      if (e.target.checked) {
+        document.documentElement.setAttribute('data-theme', 'light');
+        localStorage.setItem('theme', 'light');
+      } else {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        localStorage.setItem('theme', 'dark');
+      }    
+    }
+
+    toggleSwitch.addEventListener('change', switchTheme, false);
+
+    // ===== تحميل الرسائل =====
+    async function loadMessages() {
+      try {
+        const res = await fetch('/api/messages', { 
+          headers: { 'Authorization': 'Bearer ' + token } 
+        });
+        
+        if (res.ok) {
+          const messages = await res.json();
+          displayMessages(messages);
+          updateStats(messages);
+        } else if (res.status === 401) {
+          // توكن غير صالح - تسجيل خروج تلقائي
+          logout();
+        } else {
+          console.error('Failed to load messages');
+          showError('فشل تحميل الرسائل');
+        }
+      } catch (err) {
+        console.error('Error fetching messages:', err);
+        showError('خطأ في الاتصال بالخادم');
+      }
+    }
+
+    // ===== عرض الرسائل =====
+    function displayMessages(messages) {
       const tbody = document.getElementById('messagesBody');
-      tbody.innerHTML = '';
-      messages.forEach(msg => {
-        let date;
-        if(msg.createdAt){
-          if(msg.createdAt._seconds) date = new Date(msg.createdAt._seconds*1000);
-          else date = new Date(msg.createdAt);
-        } else date = new Date();
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${msg.name}</td>
-          <td>${msg.phone}</td>
-          <td>${msg.message}</td>
-          <td>${date.toLocaleString()}</td>
+      
+      if (!messages || messages.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="4" class="no-messages">
+              <i class="fas fa-inbox"></i>
+              لا توجد رسائل بعد
+            </td>
+          </tr>
         `;
+        return;
+      }
+
+      tbody.innerHTML = '';
+      
+      messages.forEach((msg, index) => {
+        // معالجة التاريخ
+        let date;
+        if (msg.createdAt) {
+          if (msg.createdAt._seconds) {
+            // تاريخ من Firebase
+            date = new Date(msg.createdAt._seconds * 1000);
+          } else {
+            date = new Date(msg.createdAt);
+          }
+        } else {
+          date = new Date();
+        }
+
+        const tr = document.createElement('tr');
+        tr.style.animationDelay = `${index * 0.1}s`;
+        
+        tr.innerHTML = `
+          <td><i class="fas fa-user-circle" style="color: var(--accent-neon); margin-left: 5px;"></i>${escapeHtml(msg.name) || 'غير معروف'}</td>
+          <td><i class="fas fa-phone-alt" style="color: var(--accent-blue); margin-left: 5px;"></i>${escapeHtml(msg.phone) || 'غير متوفر'}</td>
+          <td class="message-cell" title="${escapeHtml(msg.message)}">${escapeHtml(msg.message) || '...'}</td>
+          <td><i class="fas fa-clock" style="color: var(--accent-neon); margin-left: 5px;"></i>${formatDate(date)}</td>
+        `;
+        
         tbody.appendChild(tr);
       });
-    } else {
-      console.error('Failed to load messages');
     }
-  } catch(err){
-    console.error('Error fetching messages:', err);
-  }
-}
 
-function logout(){
-  localStorage.removeItem('token');
-  window.location.href = '/login';
-}
+    // ===== تحديث الإحصائيات =====
+    function updateStats(messages) {
+      const total = messages.length;
+      document.getElementById('totalMessages').textContent = total;
+      
+      // رسائل اليوم
+      const today = new Date().toDateString();
+      const todayCount = messages.filter(msg => {
+        let msgDate;
+        if (msg.createdAt) {
+          if (msg.createdAt._seconds) {
+            msgDate = new Date(msg.createdAt._seconds * 1000);
+          } else {
+            msgDate = new Date(msg.createdAt);
+          }
+        } else {
+          msgDate = new Date();
+        }
+        return msgDate.toDateString() === today;
+      }).length;
+      document.getElementById('todayMessages').textContent = todayCount;
+      
+      // مرسلين فريدين
+      const uniqueSenders = new Set(messages.map(m => m.phone)).size;
+      document.getElementById('uniqueSenders').textContent = uniqueSenders;
+      
+      // آخر تحديث
+      document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString('ar-EG', {
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    }
 
-loadMessages();
-</script>
+    // ===== عرض خطأ =====
+    function showError(message) {
+      const tbody = document.getElementById('messagesBody');
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="4" class="no-messages" style="color: var(--button-danger);">
+            <i class="fas fa-exclamation-triangle"></i>
+            ${message}
+          </td>
+        </tr>
+      `;
+    }
 
+    // ===== تنسيق التاريخ =====
+    function formatDate(date) {
+      const now = new Date();
+      const diffMs = now - date;
+      const diffMins = Math.floor(diffMs / 60000);
+      const diffHours = Math.floor(diffMs / 3600000);
+      const diffDays = Math.floor(diffMs / 86400000);
+
+      if (diffMins < 1) return 'الآن';
+      if (diffMins < 60) return `منذ ${diffMins} دقيقة`;
+      if (diffHours < 24) return `منذ ${diffHours} ساعة`;
+      if (diffDays === 1) return 'أمس';
+      if (diffDays < 7) return `منذ ${diffDays} أيام`;
+      
+      return date.toLocaleDateString('ar-EG', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    }
+
+    // ===== هروب النصوص لمنع XSS =====
+    function escapeHtml(unsafe) {
+      if (!unsafe) return unsafe;
+      return unsafe
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    // ===== تسجيل الخروج =====
+    function logout() {
+      localStorage.removeItem('token');
+      window.location.href = '/login';
+    }
+
+    // ===== تحديث تلقائي كل 30 ثانية =====
+    loadMessages();
+    setInterval(loadMessages, 30000);
+  </script>
 </body>
 </html>
