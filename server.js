@@ -1,12 +1,16 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const admin = require('firebase-admin');
-const fetch = require('node-fetch'); // نسخة 2.x CommonJS
-const dotenv = require('dotenv');
-const path = require('path');
-const jwt = require('jsonwebtoken');
+// server.js
+import express from "express";
+import bodyParser from "body-parser";
+import admin from "firebase-admin";
+import path from "path";
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+import { fileURLToPath } from "url";
 
 dotenv.config();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const app = express();
 app.use(bodyParser.json());
 
@@ -46,8 +50,9 @@ app.post('/api/messages', async (req, res) => {
       createdAt: admin.firestore.Timestamp.fromDate(now)
     });
 
-    // إرسال رسالة على Telegram
+    // إرسال رسالة على Telegram باستخدام dynamic import
     if (process.env.TELEGRAM_TOKEN_ID && process.env.TELEGRAM_CHAT_ID) {
+      const fetch = (await import("node-fetch")).default;
       await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_TOKEN_ID}/sendMessage`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -88,10 +93,10 @@ app.get('/api/messages', authenticateToken, async (req, res) => {
   }
 });
 
-// Serve ملفات HTML ثابتة من نفس المجلد
+// Serve ملفات HTML ثابتة
 app.get('/login', (req, res) => res.sendFile(path.join(__dirname, 'login.html')));
 app.get('/dashboard', (req, res) => res.sendFile(path.join(__dirname, 'dashboard.html')));
 app.get('*', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 
 // مهم جدًا: لا تستخدم app.listen على Vercel
-module.exports = app;
+export default app;
