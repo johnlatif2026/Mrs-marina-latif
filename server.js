@@ -93,6 +93,30 @@ app.get('/api/messages', authenticateToken, async (req, res) => {
   }
 });
 
+app.delete('/api/messages/:id', authenticateToken, async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).json({ error: 'Message ID is required' });
+    }
+
+    const docRef = db.collection('messages').doc(id);
+    const doc = await docRef.get();
+
+    if (!doc.exists) {
+      return res.status(404).json({ error: 'Message not found' });
+    }
+
+    await docRef.delete();
+
+    res.json({ success: true, message: 'Message deleted successfully' });
+  } catch (err) {
+    console.error("Error deleting message:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // Serve ملفات HTML ثابتة
 app.get('/login', (req, res) => res.sendFile(path.join(__dirname, 'login.html')));
 app.get('/dashboard', (req, res) => res.sendFile(path.join(__dirname, 'dashboard.html')));
