@@ -9,8 +9,6 @@ const jwt = require('jsonwebtoken');
 dotenv.config();
 const app = express();
 app.use(bodyParser.json());
-
-// Serve static files
 app.use(express.static(path.join(__dirname, '/')));
 
 // Firebase setup
@@ -20,7 +18,7 @@ const db = admin.firestore();
 
 const JWT_SECRET = process.env.JWT;
 
-// JWT Middleware
+// Middleware JWT
 function authenticateToken(req,res,next){
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
@@ -35,10 +33,10 @@ function authenticateToken(req,res,next){
 // API: submit messages
 app.post('/api/messages', async (req,res)=>{
   try{
-    const { name,phone,message } = req.body;
+    const { name, phone, message } = req.body;
     const now = new Date();
     await db.collection('messages').add({
-      name,phone,message,createdAt: admin.firestore.Timestamp.fromDate(now)
+      name, phone, message, createdAt: admin.firestore.Timestamp.fromDate(now)
     });
     await fetch(`https://api.telegram.org/bot${process.env.TELEGRAM_TOKEN_ID}/sendMessage`,{
       method:'POST',
@@ -50,6 +48,7 @@ app.post('/api/messages', async (req,res)=>{
     });
     res.status(200).json({ success:true });
   } catch(err){
+    console.error("Error saving message:", err);
     res.status(500).json({ error: err.message });
   }
 });
@@ -77,20 +76,10 @@ app.get('/api/messages', authenticateToken, async (req,res)=>{
   }
 });
 
-// Serve login.html
-app.get('/login',(req,res)=>{
-  res.sendFile(path.join(__dirname,'login.html'));
-});
-
-// Serve dashboard.html
-app.get('/dashboard',(req,res)=>{
-  res.sendFile(path.join(__dirname,'dashboard.html'));
-});
-
-// Fallback: serve index.html
-app.get('*',(req,res)=>{
-  res.sendFile(path.join(__dirname,'index.html'));
-});
+// Serve static HTML
+app.get('/login',(req,res)=> res.sendFile(path.join(__dirname,'login.html')));
+app.get('/dashboard',(req,res)=> res.sendFile(path.join(__dirname,'dashboard.html')));
+app.get('*',(req,res)=> res.sendFile(path.join(__dirname,'index.html')));
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT,()=>console.log(`Server running on port ${PORT}`));
