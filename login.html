@@ -1,34 +1,51 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-  <meta charset="UTF-8">
-  <title>Login</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تسجيل الدخول - Dashboard</title>
+<style>
+body { font-family: Arial, sans-serif; display:flex; justify-content:center; align-items:center; height:100vh; background:#f0f0f0; }
+.login-container { background:white; padding:30px; border-radius:10px; box-shadow:0 0 10px rgba(0,0,0,0.1); width:300px; }
+h2 { text-align:center; color:#4CAF50; }
+input { width:100%; padding:10px; margin:10px 0; border:1px solid #ccc; border-radius:5px; }
+button { width:100%; padding:10px; background:#4CAF50; color:white; border:none; border-radius:5px; cursor:pointer; }
+button:hover { background:#45a049; }
+#status { color:red; text-align:center; }
+</style>
 </head>
 <body>
-  <h1>تسجيل الدخول</h1>
+
+<div class="login-container">
+  <h2>تسجيل الدخول</h2>
   <form id="loginForm">
     <input type="text" name="username" placeholder="اسم المستخدم" required>
     <input type="password" name="password" placeholder="كلمة المرور" required>
     <button type="submit">دخول</button>
   </form>
+  <p id="status"></p>
+</div>
 
-  <script>
-    const form = document.getElementById('loginForm');
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const formData = new FormData(form);
-      const data = {
-        username: formData.get('username'),
-        password: formData.get('password')
-      };
-      const res = await fetch('/api/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      });
-      if(res.ok) window.location.href = '/dashboard.html';
-      else alert('خطأ في اسم المستخدم أو كلمة المرور');
-    });
-  </script>
+<script>
+const form = document.getElementById('loginForm');
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const formData = new FormData(form);
+  const data = { username: formData.get('username'), password: formData.get('password') };
+  const res = await fetch('/api/login', {
+    method:'POST',
+    headers:{ 'Content-Type':'application/json' },
+    body: JSON.stringify(data)
+  });
+  const status = document.getElementById('status');
+  if(res.ok){
+    const json = await res.json();
+    localStorage.setItem('token', json.token);
+    window.location.href = '/dashboard.html';
+  } else {
+    status.textContent = 'اسم المستخدم أو كلمة المرور غير صحيحة';
+  }
+});
+</script>
 </body>
 </html>
