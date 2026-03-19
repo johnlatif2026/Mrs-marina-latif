@@ -1,71 +1,26 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Science Teacher</title>
-<style>
-body{font-family:Arial;margin:0;background:#f4f4f4;text-align:center;}
-header{background:#0f2027;color:white;padding:30px;}
-section{padding:20px;}
-.card{background:white;padding:20px;margin:10px;border-radius:10px;}
-input,textarea{width:90%;padding:10px;margin:5px;}
-button{padding:10px;background:#00c9a7;border:none;cursor:pointer;}
-.links a{display:block;margin:5px;color:#0f2027;text-decoration:none;}
-</style>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
+  <meta charset="UTF-8">
+  <title>Portfolio Science Teacher</title>
 </head>
 <body>
+  <h1>مرحبا بكم في بورتفوليو مدرسة العلوم</h1>
 
-<header>
-<h1>👩‍🔬 مدرسة علوم</h1>
-<p>تبسيط العلوم بطريقة ممتعة ونتائج ملموسة</p>
-</header>
+  <h2>آخر الدروس</h2>
+  <ul id="posts"></ul>
 
-<section>
-<h2>من أنا</h2>
-<div class="card">أنا مدرسة علوم، خبرة 5 سنوات، خريجة كلية علوم، شغفي تبسيط العلوم للطلاب</div>
-</section>
-
-<section>
-<h2>المواد</h2>
-<div class="card">Biology 🧬</div>
-<div class="card">Chemistry ⚗️</div>
-<div class="card">Physics ⚡</div>
-</section>
-
-<section>
-<h2>تواصل معي</h2>
-<div class="links">
-<a href="https://facebook.com" target="_blank">فيسبوك</a>
-<a href="https://wa.me/201229971386" target="_blank">واتساب</a>
-</div>
-
-<form id="form">
-<input id="name" placeholder="الاسم" required>
-<input id="phone" placeholder="رقم الهاتف" required>
-<textarea id="msg" placeholder="رسالتك" required></textarea>
-<button>إرسال</button>
-</form>
-</section>
-
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, addDoc, collection } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-const firebaseConfig = JSON.parse(`FIREBASE_CONFIG`);
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-document.getElementById("form").addEventListener("submit",async e=>{
-e.preventDefault();
-await fetch('/api/contact',{method:'POST',body:JSON.stringify({
-name:name.value,phone:phone.value,message:msg.value
-})});
-alert("تم الإرسال ✅");
-});
-</script>
-
+  <script>
+    fetch('/api/posts')
+      .then(res => res.json())
+      .then(posts => {
+        const ul = document.getElementById('posts');
+        posts.forEach(post => {
+          const li = document.createElement('li');
+          li.textContent = post.title + ' - ' + post.description;
+          ul.appendChild(li);
+        });
+      });
+  </script>
 </body>
 </html>
