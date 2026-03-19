@@ -82,8 +82,13 @@ app.get('/api/messages', authenticateToken, async (req, res) => {
 });
 
 // Serve dashboard HTML (can be protected via JWT in frontend fetch)
-app.get('/dashboard.html', (req, res) => {
+app.get('/dashboard', (req, res) => {
   res.sendFile(path.join(__dirname, 'dashboard.html'));
+});
+
+// Serve login.html
+app.get('/login', (req, res) => {
+  res.sendFile(path.join(__dirname, 'login.html'));
 });
 
 // Fallback: serve index.html for all other routes
