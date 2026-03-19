@@ -5,13 +5,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>بورتفوليو مدرسة العلوم</title>
 <style>
-body { font-family: Arial, sans-serif; margin:0; padding:0; }
-header { background: #4CAF50; color:white; padding:20px; text-align:center; }
-section { padding:20px; }
-.profile img { width:200px; border-radius:50%; }
-.contact-form input, .contact-form textarea { width:100%; padding:10px; margin:5px 0; }
-.contact-form button { padding:10px 20px; background:#4CAF50; color:white; border:none; cursor:pointer; border-radius:5px; }
-.social a { margin-right:10px; text-decoration:none; color:#4CAF50; }
+:root {
+  --bg-color:#121212;
+  --text-color:#e0e0e0;
+  --accent-color:#4CAF50;
+  --input-bg:#1f1f1f;
+  --input-border:#333;
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+body { font-family: Arial, sans-serif; background:var(--bg-color); color:var(--text-color); line-height:1.6; }
+header { background: var(--accent-color); color:white; padding:20px; text-align:center; }
+section { padding:20px; max-width:800px; margin:auto; }
+.profile img { width:150px; border-radius:50%; display:block; margin:auto; }
+.contact-form input, .contact-form textarea { width:100%; padding:10px; margin:10px 0; border:1px solid var(--input-border); border-radius:5px; background:var(--input-bg); color:var(--text-color); }
+.contact-form button { padding:10px 20px; background:var(--accent-color); color:white; border:none; cursor:pointer; border-radius:5px; }
+.contact-form button:hover { background:#45a049; }
+.social a { margin-right:10px; text-decoration:none; color:var(--accent-color); }
+@media(max-width:600px){ .profile img{width:120px;} section{padding:10px;} }
 </style>
 </head>
 <body>
@@ -32,8 +42,8 @@ section { padding:20px; }
 
 <section class="social">
   <h3>تواصلوا معي عبر:</h3>
-  <a href="https://wa.me/0123456789" target="_blank">واتساب</a>
-  <a href="https://www.facebook.com/username" target="_blank">فيسبوك</a>
+  <a href="https://wa.me/201229971386" target="_blank">واتساب</a>
+  <a href="https://www.facebook.com/marinalatif" target="_blank">فيسبوك</a>
 </section>
 
 <section class="contact">
@@ -63,7 +73,6 @@ document.getElementById('contactForm').addEventListener('submit', async e => {
       headers: {'Content-Type':'application/json'},
       body: JSON.stringify(data)
     });
-
     if(res.ok){
       document.getElementById('status').textContent = "تم إرسال الرسالة بنجاح!";
       e.target.reset();
@@ -78,5 +87,6 @@ document.getElementById('contactForm').addEventListener('submit', async e => {
   }
 });
 </script>
+
 </body>
 </html>
