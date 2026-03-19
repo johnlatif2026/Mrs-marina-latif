@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard</title>
+
+<style>
+body {
+  font-family:Arial;
+  margin:0;
+  background:#f4f4f4;
+}
+
+header {
+  background:#0f2027;
+  color:white;
+  padding:15px;
+  text-align:center;
+}
+
+.container {
+  padding:20px;
+}
+
+.card {
+  background:white;
+  padding:20px;
+  border-radius:10px;
+  margin-bottom:15px;
+}
+
+button {
+  padding:10px;
+  background:red;
+  color:white;
+  border:none;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h2>Dashboard</h2>
+</header>
+
+<div class="container">
+  <div class="card">📊 إحصائيات الموقع</div>
+  <div class="card">📩 الرسائل</div>
+
+  <button onclick="logout()">Logout</button>
+</div>
+
+<script>
+async function checkAuth(){
+  const token = localStorage.getItem("token");
+
+  if(!token){
+    location.href="/login.html";
+    return;
+  }
+
+  const res = await fetch('/api/verify',{
+    headers:{ Authorization:"Bearer "+token }
+  });
+
+  if(res.status !== 200){
+    localStorage.removeItem("token");
+    location.href="/login.html";
+  }
+}
+
+function logout(){
+  localStorage.removeItem("token");
+  location.href="/";
+}
+
+checkAuth();
+</script>
+
+</body>
+</html>
