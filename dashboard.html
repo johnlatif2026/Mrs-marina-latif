@@ -48,40 +48,26 @@ button {
 <div class="card">📊 إحصائيات الموقع</div>
 <h2>📩 الرسائل</h2>
 <button onclick="logout()">Logout</button>
-
 <div id="msgs"></div>
 
 <script>
 const token = localStorage.getItem("token");
-
 if(!token) location.href="/login.html";
 
 async function load(){
   const res = await fetch('/api/messages');
   const data = await res.json();
-
+  const msgs = document.getElementById("msgs");
+  msgs.innerHTML="";
   data.forEach(m=>{
-    document.getElementById("msgs").innerHTML += `
-      <div>
-        <p>${m.name}</p>
-        <p>${m.phone}</p>
-        <p>${m.message}</p>
-        <button onclick="del('${m.id}')">❌ حذف</button>
-        <hr>
-      </div>
-    `;
+    const div=document.createElement("div");
+    div.innerHTML=`<p>${m.name}</p><p>${m.phone}</p><p>${m.message}</p>
+    <button onclick="del('${m.id}')">❌ حذف</button><hr>`;
+    msgs.appendChild(div);
   });
 }
-
-async function del(id){
-  await fetch('/api/delete?id='+id);
-  location.reload();
-}
-
-function logout(){
-  localStorage.removeItem("token");
-  location.href="/";
-}
+async function del(id){ await fetch('/api/delete?id='+id); load(); }
+function logout(){ localStorage.removeItem("token"); location.href="/"; }
 
 load();
 </script>
