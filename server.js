@@ -78,12 +78,12 @@ app.get('/api/messages', authenticateToken, async (req,res)=>{
 });
 
 // Serve login.html
-app.get('/login.html',(req,res)=>{
+app.get('/login',(req,res)=>{
   res.sendFile(path.join(__dirname,'login.html'));
 });
 
 // Serve dashboard.html
-app.get('/dashboard.html',(req,res)=>{
+app.get('/dashboard',(req,res)=>{
   res.sendFile(path.join(__dirname,'dashboard.html'));
 });
 
