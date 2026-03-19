@@ -49,8 +49,12 @@ async function loadMessages(){
     const tbody = document.getElementById('messagesBody');
     tbody.innerHTML = '';
     messages.forEach(msg => {
+      let date;
+      if(msg.createdAt){
+        if(msg.createdAt._seconds) date = new Date(msg.createdAt._seconds*1000);
+        else date = new Date(msg.createdAt);
+      } else date = new Date();
       const tr = document.createElement('tr');
-      const date = new Date(msg.createdAt._seconds ? msg.createdAt._seconds*1000 : msg.createdAt);
       tr.innerHTML = `
         <td>${msg.name}</td>
         <td>${msg.email}</td>
