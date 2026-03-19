@@ -1,44 +1,70 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-<meta name="viewport" content="width=device-width">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Science Teacher</title>
-
 <style>
-body{font-family:Arial;text-align:center;background:#f4f4f4}
-section{padding:20px}
-input,textarea{width:90%;padding:10px;margin:5px}
-button{padding:10px;background:#00c9a7;border:none}
+body{font-family:Arial;margin:0;background:#f4f4f4;text-align:center;}
+header{background:#0f2027;color:white;padding:30px;}
+section{padding:20px;}
+.card{background:white;padding:20px;margin:10px;border-radius:10px;}
+input,textarea{width:90%;padding:10px;margin:5px;}
+button{padding:10px;background:#00c9a7;border:none;cursor:pointer;}
+.links a{display:block;margin:5px;color:#0f2027;text-decoration:none;}
 </style>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
 </head>
-
 <body>
 
+<header>
 <h1>👩‍🔬 مدرسة علوم</h1>
+<p>تبسيط العلوم بطريقة ممتعة ونتائج ملموسة</p>
+</header>
+
+<section>
+<h2>من أنا</h2>
+<div class="card">أنا مدرسة علوم، خبرة 5 سنوات، خريجة كلية علوم، شغفي تبسيط العلوم للطلاب</div>
+</section>
+
+<section>
+<h2>المواد</h2>
+<div class="card">Biology 🧬</div>
+<div class="card">Chemistry ⚗️</div>
+<div class="card">Physics ⚡</div>
+</section>
 
 <section>
 <h2>تواصل معي</h2>
+<div class="links">
+<a href="https://facebook.com" target="_blank">فيسبوك</a>
+<a href="https://wa.me/201229971386" target="_blank">واتساب</a>
+</div>
 
-<input id="name" placeholder="اسمك">
-<input id="phone" placeholder="رقمك">
-<textarea id="msg" placeholder="رسالتك"></textarea>
-
-<button onclick="send()">إرسال</button>
+<form id="form">
+<input id="name" placeholder="الاسم" required>
+<input id="phone" placeholder="رقم الهاتف" required>
+<textarea id="msg" placeholder="رسالتك" required></textarea>
+<button>إرسال</button>
+</form>
 </section>
 
-<script>
-async function send(){
-  await fetch('/api/contact',{
-    method:'POST',
-    body: JSON.stringify({
-      name:name.value,
-      phone:phone.value,
-      message:msg.value
-    })
-  });
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, addDoc, collection } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-  alert("تم الإرسال ✅");
-}
+const firebaseConfig = JSON.parse(`FIREBASE_CONFIG`);
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+document.getElementById("form").addEventListener("submit",async e=>{
+e.preventDefault();
+await fetch('/api/contact',{method:'POST',body:JSON.stringify({
+name:name.value,phone:phone.value,message:msg.value
+})});
+alert("تم الإرسال ✅");
+});
 </script>
 
 </body>
