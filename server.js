@@ -77,7 +77,7 @@ app.post('/api/login', (req, res) => {
     const token = jwt.sign({ username }, JWT_SECRET, { expiresIn: '2h' });
     res.json({ token });
   } else {
-    res.status(401).json({ error: 'Invalid credentials' });
+    res.status(401).json({ error: 'اسم  المستخدم أو كلمة المرور غير صحيحة' });
   }
 });
 
