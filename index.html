@@ -2,579 +2,696 @@
 <html lang="ar">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
-  <title>Mrs Marina Latif</title>
-  <!-- Google Fonts: Poppins للعربية والأجنبية -->
-  <link rel="icon" href="https://i.postimg.cc/gjJnNGhk/IMG-20260320-WA0002.jpg" type="image/png">  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Mrs Marina Latif | Science Educator</title>
+  <!-- Preconnect for faster Google Fonts loading -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-  <!-- Font Awesome للأيقونات (اختياري ولكن مفيد) -->
+  <!-- Google Fonts: Cairo for better Arabic support + Inter for modern look -->
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Font Awesome 6 (Free CDN) -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
-    /* ===== المتغيرات الأساسية للثيم ===== */
-    :root {
-      /* الوضع الداكن (Dark Mode) - الإعدادات الافتراضية */
-      --bg-dark: #0a0f0c;
-      --bg-card: #1a2a1f;
-      --accent-neon: #4aff9e;
-      --accent-blue: #7bc5f5;
-      --text-light: #f0f7f0;
-      --text-dim: #b0e0b0;
-      --input-bg: #253b2a;
-      --shadow-3d: 0 20px 30px -10px rgba(0,255,150,0.3), 0 0 0 1px rgba(74,255,158,0.2) inset;
-      --bg-gradient-start: #1a3a2a;
-      --bg-gradient-end: #0a120e;
-      --body-bg-overlay: repeating-linear-gradient(45deg, transparent 0%, transparent 5%, rgba(74, 255, 158, 0.03) 5%, rgba(123, 197, 245, 0.03) 10%);
-      --header-gradient: linear-gradient(145deg, #1f4a2f, #0e301c);
-      --info-item-bg: rgba(0,0,0,0.4);
-      --contact-bg: rgba(20, 40, 25, 0.8);
-    }
-
-    /* الوضع الفاتح (Light Mode) - متغيرات جديدة */
-    [data-theme="light"] {
-      --bg-dark: #f0f7f0;
-      --bg-card: #d4e8d4;
-      --accent-neon: #2a7a4a;
-      --accent-blue: #1a5a9a;
-      --text-light: #0a2f1a;
-      --text-dim: #2a5a3a;
-      --input-bg: #e0f0e0;
-      --shadow-3d: 0 20px 30px -10px rgba(0,100,50,0.3), 0 0 0 1px rgba(42,122,74,0.2) inset;
-      --bg-gradient-start: #a8d8b0;
-      --bg-gradient-end: #c8e8d0;
-      --body-bg-overlay: repeating-linear-gradient(45deg, transparent 0%, transparent 5%, rgba(42, 122, 74, 0.05) 5%, rgba(26, 90, 154, 0.05) 10%);
-      --header-gradient: linear-gradient(145deg, #6da67a, #4a8c5a);
-      --info-item-bg: rgba(255,255,255,0.6);
-      --contact-bg: rgba(200, 230, 210, 0.9);
-    }
-
-    /* ===== إعادة تعيين الأنماط ===== */
     * {
-      box-sizing: border-box;
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* DARK MODE ONLY — rich, deep, elegant dark theme */
+    :root {
+      --bg-primary: #0b0f0c;
+      --bg-secondary: #111a14;
+      --bg-elevated: #1a241e;
+      --bg-card: #1a221c;
+      --surface-glass: rgba(30, 40, 34, 0.65);
+      --accent-primary: #5ef0a3;
+      --accent-glow: #3ad886;
+      --accent-secondary: #6cc9ff;
+      --text-main: #edf5ef;
+      --text-muted: #b3cfbc;
+      --border-glow: rgba(94, 240, 163, 0.3);
+      --shadow-sm: 0 8px 20px rgba(0, 0, 0, 0.6);
+      --shadow-glow: 0 10px 25px -5px rgba(94, 240, 163, 0.25);
+      --gradient-1: linear-gradient(135deg, #1c2e24 0%, #0c1610 100%);
+      --gradient-card: linear-gradient(145deg, #1f2b24, #141e18);
+      --transition-fast: all 0.2s cubic-bezier(0.2, 0.9, 0.4, 1.1);
     }
 
     body {
-      font-family: 'Poppins', Arial, sans-serif;
-      background: var(--bg-dark);
-      color: var(--text-light);
-      line-height: 1.7;
+      background: var(--bg-primary);
+      color: var(--text-main);
+      font-family: 'Cairo', 'Inter', sans-serif;
+      line-height: 1.6;
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      background: radial-gradient(circle at 30% 30%, var(--bg-gradient-start), var(--bg-gradient-end));
+      padding: 1.5rem;
       position: relative;
       overflow-x: hidden;
-      transition: background-color 0.5s ease, color 0.3s ease;
     }
 
-    /* تأثير خلفية متحركة */
+    /* animated noise / grain overlay for depth (lightweight) */
     body::before {
       content: "";
       position: fixed;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: var(--body-bg-overlay);
-      animation: rotateBackground 120s linear infinite;
-      z-index: -1;
-      transition: background 0.5s ease;
-    }
-
-    @keyframes rotateBackground {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    /* ===== مفتاح التبديل Dark/Light Mode ===== */
-    .theme-switch-wrapper {
-      display: flex;
-      justify-content: flex-end;
-      margin-bottom: 20px;
-      position: relative;
-      z-index: 100;
-    }
-
-    .theme-switch {
-      display: inline-block;
-      height: 40px;
-      position: relative;
-      width: 80px;
-    }
-
-    .theme-switch input {
-      display: none;
-    }
-
-    .slider {
-      background: var(--bg-card);
-      bottom: 0;
-      cursor: pointer;
-      left: 0;
-      position: absolute;
-      right: 0;
       top: 0;
-      transition: 0.4s;
-      border-radius: 40px;
-      box-shadow: 0 0 20px var(--accent-neon);
-      border: 2px solid var(--accent-neon);
-    }
-
-    .slider:before {
-      background: var(--accent-neon);
-      bottom: 4px;
-      content: "🌙";
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 28px;
-      left: 4px;
-      position: absolute;
-      transition: 0.4s;
-      width: 28px;
-      border-radius: 50%;
-      color: var(--bg-dark);
-      font-size: 16px;
-    }
-
-    input:checked + .slider:before {
-      content: "☀️";
-      transform: translateX(40px);
-    }
-
-    /* ===== الحاوية الرئيسية ===== */
-    .portfolio-container {
-      max-width: 1200px;
+      left: 0;
       width: 100%;
+      height: 100%;
+      background-image: radial-gradient(rgba(94, 240, 163, 0.02) 1px, transparent 1px);
+      background-size: 32px 32px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* main container with max-width for large screens */
+    .container {
+      max-width: 1280px;
       margin: 0 auto;
-      animation: fadeInUp 1s ease-out;
-    }
-
-    /* ===== الهيدر المتحرك ===== */
-    .header-3d {
-      background: var(--header-gradient);
-      color: white;
-      padding: 40px 20px;
-      text-align: center;
-      border-radius: 60px 60px 30px 30px;
-      margin-bottom: 40px;
-      box-shadow: 0 30px 40px -20px black, 0 0 0 2px var(--accent-neon) inset;
       position: relative;
-      overflow: hidden;
-      animation: floatHeader 6s infinite alternate;
+      z-index: 2;
     }
 
-    .header-3d::before {
-      content: "🔬🧪";
-      position: absolute;
-      font-size: 80px;
-      opacity: 0.1;
-      bottom: -20px;
-      right: -20px;
-      transform: rotate(15deg);
-      animation: spinIcons 20s linear infinite;
-    }
-
-    @keyframes spinIcons {
-      0% { transform: rotate(15deg) scale(1); }
-      50% { transform: rotate(195deg) scale(1.2); }
-      100% { transform: rotate(375deg) scale(1); }
-    }
-
-    @keyframes floatHeader {
-      0% { transform: translateY(0); }
-      100% { transform: translateY(-10px); }
-    }
-
-    .header-3d h1 {
-      font-size: clamp(2rem, 8vw, 3.5rem);
-      font-weight: 700;
-      text-shadow: 0 5px 15px rgba(0,255,150,0.5);
-      letter-spacing: 2px;
-    }
-
-    /* ===== قسم البروفايل (بطاقة 3D) ===== */
-    .profile-card {
-      background: var(--bg-card);
-      padding: 30px 20px;
-      border-radius: 50px 20px 50px 20px;
-      box-shadow: var(--shadow-3d), 0 25px 40px -15px black;
+    /* ========== HEADER SECTION ========== */
+    .hero-section {
       text-align: center;
-      margin-bottom: 40px;
-      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), background-color 0.5s ease;
-      backdrop-filter: blur(5px);
-      border: 1px solid rgba(255,255,255,0.1);
-      transform-style: preserve-3d;
-      perspective: 1000px;
+      margin-bottom: 2.5rem;
+      padding: 2rem 1rem 1.5rem;
+      border-radius: 3rem;
+      background: var(--gradient-1);
+      box-shadow: var(--shadow-sm), inset 0 1px 0 rgba(255,255,255,0.05);
+      backdrop-filter: blur(2px);
+      border: 1px solid rgba(94, 240, 163, 0.2);
+      transition: var(--transition-fast);
+    }
+
+    .hero-title {
+      font-size: clamp(2rem, 7vw, 3.8rem);
+      font-weight: 800;
+      background: linear-gradient(to right, #e3ffe8, var(--accent-primary), #a0f5d0);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      letter-spacing: -0.5px;
+      margin-bottom: 0.5rem;
+      text-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+
+    .hero-sub {
+      font-size: clamp(1rem, 4vw, 1.4rem);
+      color: var(--text-muted);
+      background: rgba(0,0,0,0.3);
+      display: inline-block;
+      padding: 0.4rem 1.5rem;
+      border-radius: 60px;
+      backdrop-filter: blur(4px);
+      font-weight: 500;
+    }
+
+    /* ========== PROFILE CARD (MODERN GLASS) ========== */
+    .profile-card {
+      background: var(--gradient-card);
+      border-radius: 2rem;
+      padding: 2rem 1.8rem;
+      margin-bottom: 2.5rem;
+      box-shadow: var(--shadow-glow), 0 20px 35px -12px rgba(0,0,0,0.5);
+      border: 1px solid rgba(94, 240, 163, 0.25);
+      transition: transform 0.25s ease, box-shadow 0.3s;
+      backdrop-filter: blur(8px);
     }
 
     .profile-card:hover {
-      transform: translateY(-15px) rotateX(2deg) rotateY(2deg);
-      box-shadow: 0 35px 50px -15px var(--accent-neon);
+      transform: translateY(-6px);
+      box-shadow: 0 28px 40px -15px rgba(94, 240, 163, 0.3);
+      border-color: rgba(94, 240, 163, 0.5);
+    }
+
+    .avatar-wrapper {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 1.2rem;
     }
 
     .avatar {
-      width: 160px;
-      height: 160px;
+      width: 150px;
+      height: 150px;
       border-radius: 50%;
       object-fit: cover;
-      border: 5px solid var(--accent-neon);
-      box-shadow: 0 0 30px var(--accent-neon);
-      margin: 0 auto 20px;
-      display: block;
-      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      animation: pulseGlow 3s infinite;
+      border: 3px solid var(--accent-primary);
+      box-shadow: 0 0 0 4px rgba(94, 240, 163, 0.2), 0 15px 25px -8px black;
+      transition: var(--transition-fast);
+      background: #1f2e26;
     }
 
-    .avatar:hover {
-      transform: scale(1.1) rotate(5deg);
-      box-shadow: 0 0 50px var(--accent-blue);
+    .avatar:active {
+      transform: scale(0.98);
     }
 
-    @keyframes pulseGlow {
-      0% { box-shadow: 0 0 30px var(--accent-neon); }
-      50% { box-shadow: 0 0 60px var(--accent-blue); }
-      100% { box-shadow: 0 0 30px var(--accent-neon); }
+    @media (min-width: 768px) {
+      .avatar {
+        width: 180px;
+        height: 180px;
+      }
     }
 
-    .profile-card h2 {
-      font-size: 2.5rem;
-      margin-bottom: 5px;
-      background: linear-gradient(135deg, var(--text-light), var(--accent-neon));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+    .profile-name {
+      text-align: center;
+      font-size: clamp(1.8rem, 6vw, 2.6rem);
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+      color: var(--text-main);
+      letter-spacing: -0.3px;
     }
 
-    .animated-text {
-      font-size: 1.2rem;
-      color: var(--text-dim);
-      margin-bottom: 20px;
-      border-right: 3px solid var(--accent-neon);
-      white-space: nowrap;
-      overflow: hidden;
-      width: fit-content;
-      margin-left: auto;
-      margin-right: auto;
-      animation: typing 3.5s steps(30, end), blink-caret 0.75s step-end infinite;
-    }
-
-    @keyframes typing {
-      from { width: 0; }
-      to { width: 300px; }
-    }
-
-    @keyframes blink-caret {
-      from, to { border-color: transparent; }
-      50% { border-color: var(--accent-neon); }
-    }
-
-    .info-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 15px;
-      margin-top: 20px;
-    }
-
-    .info-item {
-      background: var(--info-item-bg);
-      padding: 15px 5px;
-      border-radius: 20px;
-      box-shadow: 0 5px 10px rgba(0,0,0,0.5);
+    .badge-science {
+      display: inline-block;
+      background: rgba(94, 240, 163, 0.15);
+      padding: 0.3rem 1.2rem;
+      border-radius: 40px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--accent-primary);
+      margin-bottom: 1.2rem;
       backdrop-filter: blur(5px);
-      transition: 0.3s, background-color 0.5s ease;
-      border: 1px solid var(--accent-neon);
+      border: 0.5px solid rgba(94, 240, 163, 0.3);
     }
 
-    .info-item:hover {
-      transform: scale(1.05) translateZ(20px);
-      background: var(--accent-neon);
-      color: var(--bg-dark);
+    /* stats grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem;
     }
 
-    /* ===== أزرار التواصل الاجتماعية ===== */
-    .social-3d {
+    .stat-item {
+      background: rgba(0, 0, 0, 0.45);
+      border-radius: 1.5rem;
+      padding: 1rem 0.5rem;
+      text-align: center;
+      transition: all 0.2s;
+      border: 1px solid rgba(94, 240, 163, 0.2);
+      backdrop-filter: blur(5px);
+    }
+
+    .stat-item i {
+      font-size: 1.7rem;
+      color: var(--accent-primary);
+      margin-bottom: 0.4rem;
+      display: inline-block;
+    }
+
+    .stat-value {
+      font-weight: 700;
+      font-size: 1.25rem;
+      color: var(--accent-primary);
+    }
+
+    .stat-label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    /* ========== SOCIAL BUTTONS (TOUCH FRIENDLY) ========== */
+    .social-links {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 30px;
-      margin: 40px 0;
-      padding: 20px;
+      gap: 1.2rem;
+      margin: 2rem 0 2.2rem;
     }
 
-    .social-button {
-      padding: 15px 35px;
-      border-radius: 50px;
+    .btn-social {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 0.9rem 2rem;
+      border-radius: 60px;
+      font-weight: 700;
+      font-size: 1.1rem;
       text-decoration: none;
-      font-weight: bold;
-      font-size: 1.2rem;
-      letter-spacing: 1px;
-      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      box-shadow: 0 10px 20px -5px rgba(0,0,0,0.8);
-      position: relative;
-      overflow: hidden;
-      border: 1px solid rgba(255,255,255,0.2);
-    }
-
-    .social-button::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-      transition: left 0.5s;
-    }
-
-    .social-button:hover::before {
-      left: 100%;
-    }
-
-    .social-button:hover {
-      transform: translateY(-10px) scale(1.1);
-      box-shadow: 0 20px 30px -5px var(--accent-neon);
-    }
-
-    .whatsapp { background: #25D366; color: white; }
-    .facebook { background: #1877F2; color: white; }
-
-    /* ===== نموذج الاتصال ===== */
-    .contact-3d {
-      background: var(--contact-bg);
+      transition: all 0.25s ease;
+      background: rgba(20, 30, 24, 0.9);
       backdrop-filter: blur(12px);
-      padding: 40px;
-      border-radius: 80px 20px 80px 20px;
-      box-shadow: 0 30px 40px -20px black, 0 0 0 2px var(--accent-neon) inset;
-      margin-top: 40px;
-      transition: background-color 0.5s ease;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: white;
+      box-shadow: 0 8px 14px -8px rgba(0, 0, 0, 0.5);
+      flex: 0 1 auto;
+      min-width: 160px;
     }
 
-    .contact-3d h3 {
-      font-size: 2.2rem;
-      margin-bottom: 30px;
+    .btn-social i {
+      font-size: 1.4rem;
+    }
+
+    .btn-wa {
+      background: #25d36620;
+      border-left: 3px solid #25d366;
+    }
+
+    .btn-fb {
+      background: #1877f220;
+      border-left: 3px solid #1877f2;
+    }
+
+    .btn-social:hover {
+      transform: translateY(-5px);
+      background: rgba(30, 45, 38, 0.95);
+      border-color: var(--accent-primary);
+      box-shadow: 0 18px 28px -12px rgba(94, 240, 163, 0.4);
+    }
+
+    .btn-social:active {
+      transform: translateY(2px);
+      transition: 0.05s;
+    }
+
+    /* ========== CONTACT FORM (SMOOTH + PERFORMANCE) ========== */
+    .contact-section {
+      background: var(--surface-glass);
+      backdrop-filter: blur(12px);
+      border-radius: 2rem;
+      padding: 2rem 1.8rem;
+      border: 1px solid rgba(94, 240, 163, 0.3);
+      box-shadow: 0 20px 32px -12px black;
+      margin-top: 1rem;
+      transition: var(--transition-fast);
+    }
+
+    .section-title {
+      font-size: 1.9rem;
+      font-weight: 700;
       text-align: center;
-      text-shadow: 0 0 10px var(--accent-neon);
-      color: var(--text-light);
+      margin-bottom: 1.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .section-title i {
+      color: var(--accent-primary);
+      font-size: 2rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.3rem;
     }
 
     .contact-form input,
     .contact-form textarea {
       width: 100%;
-      padding: 18px;
-      margin: 15px 0;
-      border: none;
-      border-radius: 40px;
-      background: var(--input-bg);
-      color: var(--text-light);
-      font-size: 1.1rem;
-      border: 2px solid transparent;
-      transition: 0.3s, background-color 0.5s ease;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+      padding: 1rem 1.3rem;
+      background: rgba(10, 18, 12, 0.7);
+      border: 1px solid rgba(94, 240, 163, 0.3);
+      border-radius: 2rem;
+      font-family: 'Cairo', sans-serif;
+      font-size: 1rem;
+      color: var(--text-main);
+      transition: all 0.2s;
+      backdrop-filter: blur(4px);
     }
 
     .contact-form input:focus,
     .contact-form textarea:focus {
       outline: none;
-      border-color: var(--accent-neon);
-      box-shadow: 0 0 30px var(--accent-neon);
-      transform: scale(1.02);
+      border-color: var(--accent-primary);
+      box-shadow: 0 0 0 3px rgba(94, 240, 163, 0.2);
+      background: rgba(20, 35, 24, 0.9);
     }
 
     .contact-form textarea {
-      border-radius: 40px;
+      border-radius: 1.6rem;
       resize: vertical;
+      min-height: 110px;
     }
 
-    .contact-form button {
-      padding: 18px 40px;
-      background: linear-gradient(145deg, var(--accent-neon), var(--accent-blue));
-      color: var(--bg-dark);
-      font-weight: bold;
-      font-size: 1.3rem;
-      border: none;
-      border-radius: 60px;
-      cursor: pointer;
-      transition: 0.5s;
-      box-shadow: 0 10px 20px -5px var(--accent-neon);
+    .submit-btn {
       width: 100%;
-      letter-spacing: 2px;
-      animation: buttonPulse 2s infinite;
+      background: linear-gradient(105deg, var(--accent-primary), #3ad886);
+      border: none;
+      padding: 1rem;
+      font-size: 1.25rem;
+      font-weight: 700;
+      border-radius: 3rem;
+      color: #0a120e;
+      cursor: pointer;
+      transition: all 0.25s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      font-family: 'Cairo', sans-serif;
+      letter-spacing: 0.5px;
+      margin-top: 0.5rem;
+      box-shadow: 0 8px 20px rgba(58, 216, 134, 0.3);
     }
 
-    @keyframes buttonPulse {
-      0% { box-shadow: 0 0 20px var(--accent-neon); }
-      50% { box-shadow: 0 0 50px var(--accent-blue); }
-      100% { box-shadow: 0 0 20px var(--accent-neon); }
+    .submit-btn:active {
+      transform: scale(0.97);
     }
 
-    .contact-form button:hover {
-      transform: scale(1.05) translateY(-5px);
-      background: linear-gradient(145deg, var(--accent-blue), var(--accent-neon));
-      box-shadow: 0 30px 40px -5px var(--accent-neon);
+    .submit-btn:hover {
+      filter: brightness(1.05);
+      transform: translateY(-2px);
+      box-shadow: 0 14px 26px rgba(58, 216, 134, 0.4);
     }
 
-    #status {
+    #statusMsg {
+      margin-top: 1.2rem;
       text-align: center;
-      margin-top: 20px;
-      font-size: 1.3rem;
-      color: #ffd966;
+      font-weight: 500;
+      padding: 0.6rem;
+      border-radius: 2rem;
+      background: rgba(0,0,0,0.3);
+      font-size: 0.9rem;
     }
 
-    /* ===== تحسين الاستجابة لجميع الأجهزة ===== */
-    @media (max-width: 768px) {
-      .profile-card { padding: 20px; }
-      .avatar { width: 120px; height: 120px; }
-      .info-grid { grid-template-columns: 1fr; }
-      .social-3d { flex-direction: column; align-items: center; }
-      .social-button { width: 80%; text-align: center; }
-      .contact-3d { padding: 20px; }
-      .theme-switch-wrapper { justify-content: center; }
+    /* ========== FOOTER / CREDITS (minimal) ========== */
+    .footer-note {
+      text-align: center;
+      margin-top: 2.5rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      opacity: 0.7;
     }
 
-    @media (min-width: 1920px) {
-      .portfolio-container { max-width: 1500px; }
-      .avatar { width: 220px; height: 220px; }
-      .profile-card h2 { font-size: 4rem; }
-    }
-
-    @media (orientation: landscape) and (max-height: 600px) {
-      .header-3d { padding: 20px; }
-      .avatar { width: 100px; height: 100px; }
-    }
-
-    /* ===== تأثيرات ظهور ===== */
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(40px);
+    /* ========== PERFORMANCE & RESPONSIVENESS ========== */
+    @media (max-width: 640px) {
+      body {
+        padding: 0.9rem;
       }
-      to {
-        opacity: 1;
-        transform: translateY(0);
+      .profile-card {
+        padding: 1.5rem;
       }
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.8rem;
+      }
+      .btn-social {
+        width: 100%;
+        justify-content: center;
+      }
+      .contact-section {
+        padding: 1.5rem;
+      }
+    }
+
+    /* Landscape mode & tablets */
+    @media (min-width: 768px) and (max-width: 1024px) {
+      .stats-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    /* large screens: better spacing */
+    @media (min-width: 1400px) {
+      .container {
+        max-width: 1400px;
+      }
+      .stats-grid {
+        gap: 1.5rem;
+      }
+    }
+
+    /* Disable heavy animations on devices that prefer reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* subtle floating effect only on larger screens (to avoid lag on mobiles) */
+    @media (min-width: 768px) {
+      .profile-card {
+        transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1), box-shadow 0.3s;
+      }
+    }
+
+    /* Fix for laggy scrolling on mobile: force GPU acceleration */
+    .profile-card, .btn-social, .submit-btn {
+      will-change: transform;
+      transform: translateZ(0);
+      backface-visibility: hidden;
+    }
+
+    /* elegant scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #111a14;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--accent-primary);
+      border-radius: 10px;
     }
   </style>
 </head>
-<body data-theme="dark">
-  <div class="portfolio-container">
-    
-    <!-- مفتاح التبديل Dark/Light Mode -->
-    <div class="theme-switch-wrapper">
-      <label class="theme-switch" for="checkbox">
-        <input type="checkbox" id="checkbox" />
-        <div class="slider"></div>
-      </label>
+<body>
+  <div class="container">
+    <!-- Hero Section -->
+    <div class="hero-section">
+      <h1 class="hero-title">🔬 Mrs Marina Latif</h1>
+      <div class="hero-sub">🌟 Science Educator | Primary & Preparatory</div>
     </div>
 
-    <!-- الرأس المتحرك -->
-    <header class="header-3d">
-      <h1>Mrs Marina Latif</h1>
-      <p>مُدرسة ساينس ابتدائي واعدادي</p>
-    </header>
-
-    <!-- بطاقة البروفايل 3D -->
-    <section class="profile-card">
-      <!-- استخدم أي صورة رمزية، ضع ملف profile.jpg في نفس المجلد -->
-      <img src="https://i.postimg.cc/kXzfQzdv/IMG-20260319-220452.jpg" alt="Marina Latif" class="avatar" onerror="this.src='https://via.placeholder.com/200x200/1f4a2f/4aff9e?text=🔬'">
-      <h2>مدرسة العلوم</h2>
-      <div class="animated-text">🔬 7 سنوات من التميز</div>
-      
-      <div class="info-grid">
-        <div class="info-item"><strong>العمر:</strong> 28 سنة</div>
-        <div class="info-item"><strong>التعليم:</strong> بكالوريوس علوم وتربية</div>
-        <div class="info-item"><strong>الخبرة:</strong> 7 سنوات</div>
-        <div class="info-item"><strong>منذ:</strong> 2019</div>
-        <div class="info-item"><strong>تقدير التخرج:</strong> جيد مرتفع</div>
+    <!-- Profile Card with modern stats -->
+    <div class="profile-card">
+      <div class="avatar-wrapper">
+        <img class="avatar" src="https://i.postimg.cc/kXzfQzdv/IMG-20260319-220452.jpg" alt="Marina Latif" onerror="this.src='https://placehold.co/400x400/1a241e/5ef0a3?text=🔬+Science'">
       </div>
-    </section>
-
-    <!-- روابط التواصل بتأثير 3D -->
-    <div class="social-3d">
-      <a href="https://wa.me/201229971386" target="_blank" class="social-button whatsapp"><i class="fab fa-whatsapp"></i> واتساب</a>
-      <a href="https://www.facebook.com/share/1Dfopagizi/" target="_blank" class="social-button facebook"><i class="fab fa-facebook"></i> فيسبوك</a>
+      <div class="profile-name">Marina Latif</div>
+      <div style="text-align: center;">
+        <span class="badge-science"><i class="fas fa-flask"></i> 7+ Years of Excellence</span>
+      </div>
+      
+      <div class="stats-grid">
+        <div class="stat-item">
+          <i class="fas fa-user-graduate"></i>
+          <div class="stat-value">28</div>
+          <div class="stat-label">العمر</div>
+        </div>
+        <div class="stat-item">
+          <i class="fas fa-university"></i>
+          <div class="stat-value">2019</div>
+          <div class="stat-label">بداية المسيرة</div>
+        </div>
+        <div class="stat-item">
+          <i class="fas fa-chalkboard-user"></i>
+          <div class="stat-value">7</div>
+          <div class="stat-label">سنوات خبرة</div>
+        </div>
+        <div class="stat-item">
+          <i class="fas fa-star-of-life"></i>
+          <div class="stat-value">جيد مرتفع</div>
+          <div class="stat-label">تقدير التخرج</div>
+        </div>
+        <div class="stat-item">
+          <i class="fas fa-microscope"></i>
+          <div class="stat-value">علوم</div>
+          <div class="stat-label">بكالوريوس علوم وتربية</div>
+        </div>
+      </div>
     </div>
 
-    <!-- نموذج الاتصال -->
-    <section class="contact-3d">
-      <h3>للتواصل</h3>
-      <form class="contact-form" id="contactForm">
-        <input type="text" name="name" placeholder="اسمك الطالب" required>
-        <input type="tel" name="phone" placeholder="رقم الهاتف" required>
-        <textarea name="message" rows="5" placeholder="رسالتك... استفسار، اقتراح، تواصل" required></textarea>
-        <button type="submit">إرسال الآن</button>
+    <!-- Social Links - Touch optimized -->
+    <div class="social-links">
+      <a href="https://wa.me/201229971386" target="_blank" rel="noopener noreferrer" class="btn-social btn-wa">
+        <i class="fab fa-whatsapp"></i> واتساب
+      </a>
+      <a href="https://www.facebook.com/share/1Dfopagizi/" target="_blank" rel="noopener noreferrer" class="btn-social btn-fb">
+        <i class="fab fa-facebook-f"></i> فيسبوك
+      </a>
+    </div>
+
+    <!-- Contact Form 3D / glassmorphism -->
+    <div class="contact-section">
+      <div class="section-title">
+        <i class="fas fa-envelope-open-text"></i>
+        <span>تواصل مع الأستاذة</span>
+      </div>
+      <form class="contact-form" id="teacherContactForm">
+        <div class="form-group">
+          <input type="text" name="name" placeholder="👤 اسم الطالب / ولي الأمر" required autocomplete="name">
+        </div>
+        <div class="form-group">
+          <input type="tel" name="phone" placeholder="📞 رقم الهاتف (واتساب)" required autocomplete="tel">
+        </div>
+        <div class="form-group">
+          <textarea name="message" rows="4" placeholder="💬 اكتب رسالتك هنا ... استفسار عن الدروس، تسجيل، أو أي سؤال" required></textarea>
+        </div>
+        <button type="submit" class="submit-btn">
+          <i class="fas fa-paper-plane"></i> إرسال الرسالة
+        </button>
+        <div id="statusMsg"></div>
       </form>
-      <p id="status"></p>
-    </section>
+    </div>
+    <div class="footer-note">
+      <i class="fas fa-atom"></i> Science is fun with Marina Latif
+    </div>
   </div>
 
   <script>
-    // ===== Dark/Light Mode Toggle =====
-    const toggleSwitch = document.querySelector('#checkbox');
-    const currentTheme = localStorage.getItem('theme');
-
-    if (currentTheme) {
-      document.documentElement.setAttribute('data-theme', currentTheme);
-      if (currentTheme === 'light') {
-        toggleSwitch.checked = true;
+    (function() {
+      // ----- DARK MODE ONLY (no toggle, but we ensure dark theme is forced and any legacy overrides removed)
+      // Force dark mode attributes if any conflict (pure dark mode)
+      document.documentElement.setAttribute('data-theme', 'dark');
+      document.body.style.backgroundColor = 'var(--bg-primary)';
+      // localStorage preference not needed as we keep only dark mode, but we ensure no light mode appears
+      // Remove any possible light mode class or style
+      
+      // ----- FORM HANDLER (robust & async, handles lag-free submission)
+      const form = document.getElementById('teacherContactForm');
+      const statusDiv = document.getElementById('statusMsg');
+      
+      // Helper for showing status messages with graceful UI
+      function setStatus(message, isError = false) {
+        if (!statusDiv) return;
+        statusDiv.textContent = message;
+        statusDiv.style.color = isError ? '#ffb5a7' : '#a3f0c0';
+        statusDiv.style.backgroundColor = isError ? 'rgba(255,70,70,0.1)' : 'rgba(94,240,163,0.1)';
+        statusDiv.style.borderRadius = '2rem';
+        statusDiv.style.padding = '0.6rem';
+        // Auto clear after 5 seconds if success
+        if (!isError) {
+          setTimeout(() => {
+            if (statusDiv.textContent === message) {
+              statusDiv.textContent = '';
+              statusDiv.style.backgroundColor = 'transparent';
+            }
+          }, 5000);
+        }
       }
-    }
-
-    function switchTheme(e) {
-      if (e.target.checked) {
-        document.documentElement.setAttribute('data-theme', 'light');
-        localStorage.setItem('theme', 'light');
-      } else {
-        document.documentElement.setAttribute('data-theme', 'dark');
-        localStorage.setItem('theme', 'dark');
-      }    
-    }
-
-    toggleSwitch.addEventListener('change', switchTheme, false);
-
-    // ===== نموذج الاتصال =====
-    document.getElementById('contactForm').addEventListener('submit', async e => {
-      e.preventDefault();
-      const form = e.target;
-      const formData = new FormData(form);
-      const data = {
-        name: formData.get('name'),
-        phone: formData.get('phone'),
-        message: formData.get('message')
-      };
       
-      const statusEl = document.getElementById('status');
-      statusEl.style.color = '#ffd966';
-      statusEl.textContent = "جاري الإرسال...";
-      
-      try {
-        const res = await fetch('/api/messages', {
-          method: 'POST',
-          headers: {'Content-Type':'application/json'},
-          body: JSON.stringify(data)
-        });
+      // Improved fetch with timeout and fallback (prevents hanging on poor connection)
+      async function submitForm(data) {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 15000); // 15s timeout
         
-        if(res.ok){
-          statusEl.textContent = "✅ تم إرسال الرسالة بنجاح! سنتواصل معك قريبًا.";
-          statusEl.style.color = '#4aff9e';
+        try {
+          const response = await fetch('/api/messages', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+            signal: controller.signal
+          });
+          clearTimeout(timeoutId);
+          
+          if (response.ok) {
+            const result = await response.json().catch(() => ({}));
+            return { success: true, data: result };
+          } else {
+            let errorMsg = 'فشل الإرسال';
+            try {
+              const errData = await response.json();
+              errorMsg = errData.error || 'حدث خطأ من الخادم';
+            } catch (e) {}
+            return { success: false, error: errorMsg };
+          }
+        } catch (err) {
+          clearTimeout(timeoutId);
+          if (err.name === 'AbortError') {
+            return { success: false, error: 'انتهت مهلة الاتصال، تحقق من الإنترنت وأعد المحاولة' };
+          }
+          return { success: false, error: err.message || 'خطأ في الشبكة' };
+        }
+      }
+      
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        // Get form values
+        const nameInput = form.querySelector('input[name="name"]');
+        const phoneInput = form.querySelector('input[name="phone"]');
+        const messageInput = form.querySelector('textarea[name="message"]');
+        
+        const name = nameInput ? nameInput.value.trim() : '';
+        const phone = phoneInput ? phoneInput.value.trim() : '';
+        const message = messageInput ? messageInput.value.trim() : '';
+        
+        if (!name || !phone || !message) {
+          setStatus('❌ الرجاء ملء جميع الحقول', true);
+          return;
+        }
+        
+        // simple phone validation (optional but helpful)
+        if (phone.length < 8) {
+          setStatus('📱 رقم الهاتف غير مكتمل', true);
+          return;
+        }
+        
+        setStatus('⏳ جاري إرسال الرسالة...');
+        
+        const payload = { name, phone, message };
+        
+        const result = await submitForm(payload);
+        
+        if (result.success) {
+          setStatus('✅ تم الإرسال بنجاح! سأتواصل معك قريبًا 📚✨');
           form.reset();
         } else {
-          const err = await res.json();
-          statusEl.textContent = "❌ خطأ: " + (err.error || 'حاول مرة أخرى');
-          statusEl.style.color = '#ff6b6b';
-          console.error("Server error:", err);
+          setStatus(`❌ ${result.error}`, true);
+          console.warn('Form submit error:', result.error);
         }
-      } catch(err){
-        statusEl.textContent = "❌ حدث خطأ في الشبكة: " + err.message;
-        statusEl.style.color = '#ff6b6b';
-        console.error("Fetch error:", err);
+      });
+      
+      // =====  PERFORMANCE FIX: Remove heavy parallax or laggy animations on mobile touch
+      // We ensure that any potential heavy CSS transitions are reduced on touch devices
+      if ('ontouchstart' in window) {
+        // On touch devices, slightly reduce hover transforms to avoid repaint lag
+        const style = document.createElement('style');
+        style.textContent = `
+          .profile-card:hover {
+            transform: translateY(-2px) !important;
+          }
+          .btn-social:hover {
+            transform: translateY(-2px) !important;
+          }
+          .submit-btn:hover {
+            transform: translateY(-1px) !important;
+          }
+        `;
+        document.head.appendChild(style);
       }
-    });
+      
+      // Lazy image optimization: ensure avatar loads efficiently
+      const avatarImg = document.querySelector('.avatar');
+      if (avatarImg && avatarImg.complete === false) {
+        avatarImg.style.opacity = '0';
+        avatarImg.onload = () => {
+          avatarImg.style.transition = 'opacity 0.3s';
+          avatarImg.style.opacity = '1';
+        };
+        avatarImg.onerror = () => {
+          avatarImg.src = 'https://placehold.co/400x400/1a241e/5ef0a3?text=🔬+Science';
+          avatarImg.style.opacity = '1';
+        };
+      } else if (avatarImg) {
+        avatarImg.style.opacity = '1';
+      }
+      
+      // Additional: add smooth scroll behavior & reduce CLS
+      if ('scrollBehavior' in document.documentElement.style) {
+        document.documentElement.style.scrollBehavior = 'smooth';
+      }
+      
+      // Preload status message container to avoid layout shift
+      if (statusDiv) {
+        statusDiv.style.minHeight = '3rem';
+      }
+      
+      // Small fix for iOS input zoom: prevent auto zoom but keep readability
+      const inputs = document.querySelectorAll('input, textarea');
+      inputs.forEach(input => {
+        input.addEventListener('touchstart', function() {
+          this.style.fontSize = '16px';
+        }, { passive: true });
+      });
+    })();
   </script>
 </body>
 </html>
