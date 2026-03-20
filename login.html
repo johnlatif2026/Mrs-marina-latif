@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
-  <title>تسجيل الدخول | Marina Latif</title>
+  <title>تسجيل الدخول</title>
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -640,7 +640,8 @@
       if (forgotLink) {
         forgotLink.addEventListener('click', (e) => {
           e.preventDefault();
-          setStatus('📧 للتواصل مع الدعم الفني: https://wa.me/201274445091', 'info');
+          // Direct WhatsApp link - opens instantly without any message
+          window.location.href = 'https://wa.me/201274445091';
         });
       }
       
